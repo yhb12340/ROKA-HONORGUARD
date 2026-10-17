@@ -6,14 +6,16 @@
     <title>의장대에서 살아남기</title>
     <style>
         :root {
-            --bg-color: #f5f7fa;
-            --text-color: #333333;
-            --primary-color: #1c1c1e;
-            --accent-color: #007aff; /* Apple Blue */
+            --bg-color: #f2f5f3; /* 옅은 웜그레이 톤으로 정돈 */
+            --text-color: #2b332c; 
+            --primary-color: #1b4b36; /* 딥그린 (육군 의장대 메인 컬러) */
+            --accent-color: #d4af37; /* 메탈릭 골드 */
             --btn-bg: #ffffff;
-            --btn-hover: #f0f0f5;
-            --player-bg: linear-gradient(145deg, #2c2c2e, #1c1c1e);
+            --btn-hover: #f0f4f1;
+            /* 플레이어 배경: 진초록과 검은색 그라데이션 */
+            --player-bg: linear-gradient(145deg, #183325, #0d1a13);
             --player-text: #ffffff;
+            --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
         }
 
         body {
@@ -28,6 +30,21 @@
             align-items: flex-start;
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- 마크 벡터 이미지(SVG) 스타일 --- */
+        .mark-container {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+            margin-top: 4vh;
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        .mark-svg {
+            width: 100%;
+            height: 100%;
         }
 
         .app-container {
@@ -45,13 +62,14 @@
         .main-title {
             font-size: 2.2rem;
             font-weight: 800;
-            margin-top: 6vh; 
+            margin-top: 0; 
             margin-bottom: 30px;
             text-align: center;
             color: var(--primary-color);
             transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
             transform-origin: top center;
             letter-spacing: -0.5px;
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.8);
         }
 
         .menu-container {
@@ -65,26 +83,51 @@
 
         .menu-btn {
             background-color: var(--btn-bg);
-            border: none;
+            border: 1px solid rgba(27, 75, 54, 0.1);
             color: var(--primary-color);
             padding: 16px 20px;
             font-size: 1.1rem;
-            font-weight: 600;
+            font-weight: 700;
             border-radius: 16px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0,0,0,0.04);
             flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--gold-gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .menu-btn:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-            color: var(--accent-color);
+            color: var(--primary-color);
+            border-color: transparent;
+        }
+        
+        .menu-btn:hover::before {
+            opacity: 1;
+        }
+
+        /* 상세 화면 진입 시 타이틀/마크 애니메이션 */
+        .app-container.state-content-active .mark-container {
+            transform: translateY(-40px) scale(0.6);
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
         }
 
         .app-container.state-content-active .main-title {
-            transform: translateY(-40px) scale(0.85);
+            transform: translateY(-60px) scale(0.85);
             opacity: 0;
             pointer-events: none;
             position: absolute;
@@ -102,7 +145,7 @@
             background: #ffffff;
             border-radius: 24px;
             padding: 30px 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+            box-shadow: 0 10px 40px rgba(27, 75, 54, 0.08);
             opacity: 0;
             transform: translateY(20px) scale(0.98);
             pointer-events: none;
@@ -110,6 +153,7 @@
             position: absolute;
             top: 80px;
             box-sizing: border-box;
+            border-top: 4px solid var(--primary-color);
         }
 
         .app-container.state-content-active .content-container {
@@ -127,11 +171,13 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
+            border-bottom: 1px solid rgba(27, 75, 54, 0.1);
+            padding-bottom: 15px;
         }
 
         .content-title {
             font-size: 1.6rem;
-            font-weight: 700;
+            font-weight: 800;
             margin: 0;
             color: var(--primary-color);
         }
@@ -142,7 +188,7 @@
             border: none;
             padding: 8px 12px;
             font-size: 1rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: opacity 0.2s;
         }
@@ -151,12 +197,12 @@
             opacity: 0.7;
         }
 
-        /* --- Apple Music Style 개선 --- */
+        /* --- Apple Music Style 개선 (색상 테마 반영) --- */
         .song-selector {
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
-            background: #f0f0f5;
+            background: rgba(27, 75, 54, 0.05);
             padding: 6px;
             border-radius: 12px;
             overflow-x: auto;
@@ -177,16 +223,16 @@
             border-radius: 8px;
             font-size: 0.95rem;
             font-weight: 600;
-            color: #8e8e93;
+            color: #7b8a81;
             cursor: pointer;
             transition: all 0.3s ease;
             white-space: nowrap;
         }
 
         .song-tab.active {
-            background: #ffffff;
-            color: var(--primary-color);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            background: var(--primary-color);
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(27, 75, 54, 0.2);
         }
 
         .music-player-container {
@@ -194,30 +240,43 @@
             border-radius: 24px;
             padding: 30px 20px;
             color: var(--player-text);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 40px rgba(13, 26, 19, 0.3);
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
+            border: 1px solid rgba(212, 175, 55, 0.2); /* 은은한 골드 테두리 */
+        }
+
+        /* 플레이어 배경 골드 장식 */
+        .music-player-container::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 60%);
+            pointer-events: none;
         }
 
         .song-info {
             text-align: center;
             margin-bottom: 25px;
             width: 100%;
+            z-index: 1;
         }
 
         .song-title {
-            font-size: 1.6rem;
-            font-weight: 700;
+            font-size: 1.7rem;
+            font-weight: 800;
             margin: 0;
             letter-spacing: -0.5px;
+            color: var(--accent-color); /* 제목은 골드 */
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
         
         .song-artist {
             font-size: 1rem;
-            color: #aeaeb2;
+            color: #a0b3a6;
             margin-top: 6px;
             font-weight: 500;
         }
@@ -232,6 +291,7 @@
             scroll-behavior: smooth;
             mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
             -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+            z-index: 1;
         }
 
         .lyrics-container::-webkit-scrollbar {
@@ -247,7 +307,7 @@
             font-size: 1.1rem;
             font-weight: 600;
             margin: 20px 0;
-            color: #aeaeb2;
+            color: #6a8071;
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             cursor: pointer;
             line-height: 1.5;
@@ -255,10 +315,10 @@
         }
 
         .lyric-line.active {
-            font-size: 1.4rem;
+            font-size: 1.45rem;
             color: #ffffff;
             transform: scale(1.02);
-            text-shadow: 0 2px 10px rgba(255,255,255,0.2);
+            text-shadow: 0 2px 10px rgba(255,255,255,0.3);
         }
 
         .player-controls {
@@ -266,6 +326,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            z-index: 1;
         }
 
         .progress-container {
@@ -274,15 +335,15 @@
             align-items: center;
             gap: 12px;
             font-size: 0.8rem;
-            font-weight: 500;
-            color: #aeaeb2;
+            font-weight: 600;
+            color: #a0b3a6;
             margin-bottom: 20px;
         }
 
         .progress-bar-bg {
             flex: 1;
             height: 6px;
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: rgba(255, 255, 255, 0.1);
             border-radius: 4px;
             position: relative;
             cursor: pointer;
@@ -293,7 +354,7 @@
             top: 0;
             left: 0;
             height: 100%;
-            background-color: #ffffff;
+            background: var(--gold-gradient);
             border-radius: 4px;
             width: 0%;
             transition: width 0.1s linear;
@@ -305,11 +366,11 @@
             right: -4px;
             top: 50%;
             transform: translateY(-50%);
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             background: #ffffff;
             border-radius: 50%;
-            box-shadow: 0 0 4px rgba(0,0,0,0.5);
+            box-shadow: 0 0 6px rgba(212, 175, 55, 0.8);
             opacity: 0;
             transition: opacity 0.2s;
         }
@@ -331,7 +392,7 @@
             justify-content: center;
             align-items: center;
             transition: transform 0.2s ease, background-color 0.2s;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
 
         .play-btn:active {
@@ -354,7 +415,7 @@
             position: relative;
             line-height: 1.6;
             font-size: 1.05rem;
-            color: #4a4a4a;
+            color: #333333;
         }
 
         ol.custom-list > li::before {
@@ -364,31 +425,34 @@
             top: 2px;
             width: 26px;
             height: 26px;
-            background-color: #f0f0f5;
-            color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: #ffffff;
             border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 0.9rem;
             font-weight: 700;
+            box-shadow: 0 2px 5px rgba(27, 75, 54, 0.3);
         }
 
         .notice-box {
-            background-color: #fff0f0;
+            background-color: #fdfaf0;
             border-left: 4px solid var(--accent-color);
             padding: 16px 20px;
             margin-bottom: 25px;
             border-radius: 0 12px 12px 0;
-            font-weight: 600;
-            color: #d32f2f;
+            font-weight: 700;
+            color: var(--primary-color);
             line-height: 1.5;
             font-size: 0.95rem;
+            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.1);
         }
 
         .highlight {
-            color: #d32f2f;
-            font-weight: 700;
+            color: var(--accent-color);
+            font-weight: 800;
+            text-shadow: 0px 0px 1px rgba(212, 175, 55, 0.3);
         }
 
         @media (max-width: 600px) {
@@ -400,6 +464,50 @@
 <body>
 
 <div class="app-container" id="app">
+    
+    <!-- 부대 마크 벡터 이미지 (호랑이 방패 문양) -->
+    <div class="mark-container">
+        <svg class="mark-svg" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#bf953f" />
+                    <stop offset="25%" stop-color="#fcf6ba" />
+                    <stop offset="50%" stop-color="#b38728" />
+                    <stop offset="75%" stop-color="#fbf5b7" />
+                    <stop offset="100%" stop-color="#aa771c" />
+                </linearGradient>
+                <linearGradient id="shieldBg" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#2a5a41" />
+                    <stop offset="100%" stop-color="#143323" />
+                </linearGradient>
+                <filter id="shadow">
+                    <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+                </filter>
+            </defs>
+            <!-- 상단 리본 -->
+            <path d="M 10,20 Q 50,30 90,20 L 85,35 Q 50,45 15,35 Z" fill="url(#goldGrad)" filter="url(#shadow)"/>
+            <text x="50" y="34" font-size="12" font-weight="900" fill="#1b4b36" text-anchor="middle" style="letter-spacing: 2px;">대한민국</text>
+            
+            <!-- 방패 테두리 -->
+            <path d="M 20,40 Q 50,50 80,40 Q 90,70 85,90 Q 50,120 15,90 Q 10,70 20,40 Z" fill="url(#goldGrad)" filter="url(#shadow)"/>
+            <!-- 방패 배경 -->
+            <path d="M 23,43 Q 50,52 77,43 Q 86,70 82,88 Q 50,115 18,88 Q 14,70 23,43 Z" fill="url(#shieldBg)"/>
+            
+            <!-- 호랑이 형상 (단순화된 벡터) -->
+            <path d="M 35,55 L 45,65 L 55,65 L 65,55 L 60,75 L 55,85 L 45,85 L 40,75 Z" fill="url(#goldGrad)"/>
+            <!-- 눈 -->
+            <circle cx="43" cy="62" r="2" fill="#1b4b36"/>
+            <circle cx="57" cy="62" r="2" fill="#1b4b36"/>
+            <!-- 코/입술 무늬 -->
+            <path d="M 50,68 L 47,75 L 53,75 Z" fill="#1b4b36"/>
+            <path d="M 45,80 Q 50,85 55,80" fill="none" stroke="#1b4b36" stroke-width="2"/>
+            
+            <!-- 하단 텍스트 -->
+            <text x="50" y="100" font-size="11" font-weight="900" fill="url(#goldGrad)" text-anchor="middle">의 장 대</text>
+            <text x="50" y="112" font-size="10" font-weight="900" fill="url(#goldGrad)" text-anchor="middle">육  군</text>
+        </svg>
+    </div>
+
     <h1 class="main-title">의장대에서 살아남기</h1>
     
     <div class="menu-container">
@@ -489,7 +597,7 @@
             title: "행사/훈련편",
             html: `
                 <div class="notice-box">
-                    !! 대한민국 육군을 대표하는 부대로서, 행사 중에는 항상 품위를 유지할 것 !!
+                    대한민국 육군을 대표하는 부대로서, 행사 중에는 항상 품위를 유지할 것!
                 </div>
                 <ol class="custom-list">
                     <li>팔을 풀 때 조교에게 사전 보고 후 전투복을 입거나 벗기</li>
