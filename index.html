@@ -6,12 +6,14 @@
     <title>의장대에서 살아남기</title>
     <style>
         :root {
-            --bg-color: #f4f6f8;
-            --text-color: #2c3e50;
-            --primary-color: #2c3e50;
-            --accent-color: #e74c3c;
+            --bg-color: #f5f7fa;
+            --text-color: #333333;
+            --primary-color: #1c1c1e;
+            --accent-color: #007aff; /* Apple Blue */
             --btn-bg: #ffffff;
-            --btn-hover: #ecf0f1;
+            --btn-hover: #f0f0f5;
+            --player-bg: linear-gradient(145deg, #2c2c2e, #1c1c1e);
+            --player-text: #ffffff;
         }
 
         body {
@@ -25,68 +27,71 @@
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
 
         .app-container {
             width: 100%;
-            max-width: 800px;
+            max-width: 600px;
             padding: 20px;
             position: relative;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
+            box-sizing: border-box;
         }
 
         .main-title {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: 800;
-            margin-top: 8vh; 
-            margin-bottom: 40px;
+            margin-top: 6vh; 
+            margin-bottom: 30px;
             text-align: center;
-            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            color: var(--primary-color);
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
             transform-origin: top center;
+            letter-spacing: -0.5px;
         }
 
         .menu-container {
             display: flex;
             flex-direction: row;
-            gap: 20px;
+            gap: 15px;
             width: 100%;
             justify-content: center;
-            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .menu-btn {
             background-color: var(--btn-bg);
-            border: 2px solid var(--primary-color);
+            border: none;
             color: var(--primary-color);
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            border-radius: 12px;
+            padding: 16px 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 16px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
             flex: 1;
-            max-width: 200px;
         }
 
         .menu-btn:hover {
-            background-color: var(--btn-hover);
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            color: var(--accent-color);
         }
 
         .app-container.state-content-active .main-title {
-            transform: translateY(-50px) scale(0.8);
+            transform: translateY(-40px) scale(0.85);
             opacity: 0;
             pointer-events: none;
             position: absolute;
         }
 
         .app-container.state-content-active .menu-container {
-            transform: translateY(50px);
+            transform: translateY(40px);
             opacity: 0;
             pointer-events: none;
             position: absolute;
@@ -95,15 +100,15 @@
         .content-container {
             width: 100%;
             background: #ffffff;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-radius: 24px;
+            padding: 30px 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.06);
             opacity: 0;
-            transform: translateY(30px) scale(0.95);
+            transform: translateY(20px) scale(0.98);
             pointer-events: none;
-            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
             position: absolute;
-            top: 100px;
+            top: 80px;
             box-sizing: border-box;
         }
 
@@ -113,76 +118,120 @@
             pointer-events: auto;
             position: relative;
             top: 0;
-            margin-top: 40px;
+            margin-top: 20px;
+            margin-bottom: 40px;
         }
 
         .content-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 15px;
+            margin-bottom: 25px;
         }
 
         .content-title {
-            font-size: 1.8rem;
-            font-weight: 800;
+            font-size: 1.6rem;
+            font-weight: 700;
             margin: 0;
             color: var(--primary-color);
         }
 
         .back-btn {
-            background-color: var(--primary-color);
-            color: #ffffff;
+            background-color: transparent;
+            color: var(--accent-color);
             border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: opacity 0.2s;
         }
 
         .back-btn:hover {
-            background-color: #1a252f;
+            opacity: 0.7;
         }
 
-        /* Apple Music Style Player */
+        /* --- Apple Music Style 개선 --- */
+        .song-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: #f0f0f5;
+            padding: 6px;
+            border-radius: 12px;
+            overflow-x: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .song-selector::-webkit-scrollbar {
+            display: none;
+        }
+
+        .song-tab {
+            flex: 1;
+            min-width: 80px;
+            padding: 10px 5px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #8e8e93;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .song-tab.active {
+            background: #ffffff;
+            color: var(--primary-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
         .music-player-container {
-            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
-            border-radius: 20px;
-            padding: 30px;
-            color: white;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            background: var(--player-bg);
+            border-radius: 24px;
+            padding: 30px 20px;
+            color: var(--player-text);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .song-info {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            width: 100%;
         }
 
         .song-title {
-            font-size: 1.8rem;
-            font-weight: 800;
+            font-size: 1.6rem;
+            font-weight: 700;
             margin: 0;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            letter-spacing: -0.5px;
         }
         
         .song-artist {
             font-size: 1rem;
-            opacity: 0.8;
-            margin-top: 5px;
+            color: #aeaeb2;
+            margin-top: 6px;
+            font-weight: 500;
         }
 
         .lyrics-container {
-            height: 250px;
+            width: 100%;
+            height: 280px;
             overflow-y: auto;
             text-align: center;
-            margin: 20px 0;
-            padding: 10px 0;
+            margin: 10px 0 25px 0;
+            padding: 20px 0;
             scroll-behavior: smooth;
+            mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
         }
 
         .lyrics-container::-webkit-scrollbar {
@@ -195,43 +244,46 @@
         }
 
         .lyric-line {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin: 15px 0;
-            opacity: 0.4;
-            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 20px 0;
+            color: #aeaeb2;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             cursor: pointer;
+            line-height: 1.5;
+            padding: 0 10px;
         }
 
         .lyric-line.active {
-            font-size: 1.6rem;
-            opacity: 1;
-            transform: scale(1.05);
-            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            font-size: 1.4rem;
+            color: #ffffff;
+            transform: scale(1.02);
+            text-shadow: 0 2px 10px rgba(255,255,255,0.2);
         }
 
         .player-controls {
+            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 20px;
         }
 
         .progress-container {
             width: 100%;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            opacity: 0.9;
+            gap: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #aeaeb2;
+            margin-bottom: 20px;
         }
 
         .progress-bar-bg {
             flex: 1;
             height: 6px;
-            background-color: rgba(255, 255, 255, 0.3);
-            border-radius: 3px;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
             position: relative;
             cursor: pointer;
         }
@@ -241,47 +293,53 @@
             top: 0;
             left: 0;
             height: 100%;
-            background-color: white;
-            border-radius: 3px;
+            background-color: #ffffff;
+            border-radius: 4px;
             width: 0%;
             transition: width 0.1s linear;
         }
 
-        .buttons {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            margin-top: 15px;
+        .progress-bar-fill::after {
+            content: '';
+            position: absolute;
+            right: -4px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 4px rgba(0,0,0,0.5);
+            opacity: 0;
+            transition: opacity 0.2s;
         }
 
-        .control-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: transform 0.2s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .control-btn:hover {
-            transform: scale(1.1);
+        .progress-bar-bg:hover .progress-bar-fill::after {
+            opacity: 1;
         }
 
         .play-btn {
-            font-size: 2.5rem;
-            width: 60px;
-            height: 60px;
-            background-color: rgba(255,255,255,0.2);
+            background: #ffffff;
+            border: none;
+            color: var(--primary-color);
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
+            font-size: 1.8rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s ease, background-color 0.2s;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
 
-        .play-btn:hover {
-            background-color: rgba(255,255,255,0.3);
+        .play-btn:active {
+            transform: scale(0.92);
+            background-color: #f0f0f5;
         }
 
+        /* --- 리스트 및 기타 컨텐츠 스타일 --- */
         ol.custom-list {
             list-style: none;
             counter-reset: item;
@@ -291,11 +349,12 @@
 
         ol.custom-list > li {
             counter-increment: item;
-            margin-bottom: 15px;
-            padding-left: 45px;
+            margin-bottom: 18px;
+            padding-left: 42px;
             position: relative;
             line-height: 1.6;
             font-size: 1.05rem;
+            color: #4a4a4a;
         }
 
         ol.custom-list > li::before {
@@ -303,38 +362,38 @@
             position: absolute;
             left: 0;
             top: 2px;
-            width: 28px;
-            height: 28px;
-            background-color: var(--primary-color);
-            color: white;
-            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            background-color: #f0f0f5;
+            color: var(--primary-color);
+            border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 0.9rem;
-            font-weight: bold;
+            font-weight: 700;
         }
 
         .notice-box {
-            background-color: #fdf3f2;
-            border-left: 5px solid var(--accent-color);
-            padding: 15px 20px;
+            background-color: #fff0f0;
+            border-left: 4px solid var(--accent-color);
+            padding: 16px 20px;
             margin-bottom: 25px;
-            border-radius: 4px;
-            font-weight: 700;
-            color: var(--accent-color);
+            border-radius: 0 12px 12px 0;
+            font-weight: 600;
+            color: #d32f2f;
+            line-height: 1.5;
+            font-size: 0.95rem;
         }
 
         .highlight {
-            color: var(--accent-color);
-            font-weight: bold;
+            color: #d32f2f;
+            font-weight: 700;
         }
 
         @media (max-width: 600px) {
-            .menu-container { flex-direction: column; align-items: center; }
-            .menu-btn { width: 100%; max-width: none; }
-            .content-header { flex-direction: column; align-items: flex-start; gap: 15px; }
-            .back-btn { align-self: flex-end; }
+            .menu-container { flex-direction: column; }
+            .menu-btn { width: 100%; }
         }
     </style>
 </head>
@@ -358,14 +417,19 @@
     </div>
 </div>
 
-<!-- 오디오 요소들 (실제 재생용, 파일 경로를 지정해야 함) -->
 <audio id="audio-player"></audio>
 
 <script>
     const songContentHTML = `
+        <div class="song-selector" id="song-selector">
+            <button class="song-tab active" onclick="selectSong(0)">군조가</button>
+            <button class="song-tab" onclick="selectSong(1)">의장대가</button>
+            <button class="song-tab" onclick="selectSong(2)">계룡산 호랑이</button>
+        </div>
+
         <div class="music-player-container">
             <div class="song-info">
-                <h3 class="song-title" id="song-title">의장대가</h3>
+                <h3 class="song-title" id="song-title">군조가</h3>
                 <div class="song-artist" id="song-artist">의장대군가</div>
             </div>
             
@@ -382,11 +446,7 @@
                     <span id="total-time">0:00</span>
                 </div>
                 
-                <div class="buttons">
-                    <button class="control-btn" onclick="prevSong()">&#9664;&#9664;</button>
-                    <button class="control-btn play-btn" id="play-btn" onclick="togglePlay()">&#9654;</button>
-                    <button class="control-btn" onclick="nextSong()">&#9654;&#9654;</button>
-                </div>
+                <button class="play-btn" id="play-btn" onclick="togglePlay()">&#9654;</button>
             </div>
         </div>
     `;
@@ -396,33 +456,31 @@
             title: "생활편",
             html: `
                 <ol class="custom-list">
-                    <li>가급적 일과시간엔 음료나 과자 먹지 말기 (개인정비/점심시간으로도 충분)</li>
-                    <li>PX/자판기/체단실 진짜 눈치 안보고 마음껏 가도 됨</li>
-                    <li>세탁방도 마음껏 가기. 대신 인원에 비해 세탁/건조기가 적으니 되는대로 빼주기</li>
-                    <li>모자는 가장 좌측에 챙을 관물대 입구에 맞춰서 두기. 순서는 아래서부터 디모/다른 모자들/로카모/베레모</li>
-                    <li>제일 우측에는 I대각. 아래서부터 훈련용흰대각/행사용흰대각/갈색대각</li>
-                    <li>뒤에 남는 공간엔 수통과 X대각 정리해서 비치</li>
-                    <li>옷은 좌측부터 패딩/방상외피/내피/후리스/전투복 순으로 좌수걸이해서 두기</li>
-                    <li>음식은 음료는 쇼케이스, 나머지는 출타가방에 넣어서 보관</li>
-                    <li>행사복은 샤워바구니 걸이 뽑아서 행사복 걸이 만들어주기. 행사기간 끝나면 행사복은 피복실로 다시 가져다두고 행사복 걸이도 정리해두기</li>
-                    <li>침대 위는 깔끔하게 정리해두기</li>
-                    <li>생활관 자기 자리 깔끔하게, 쓴 자리 깔끔하게</li>
-                    <li>생활관 마지막으로 나갈 땐 불 끄고 문 닫고 다니기</li>
-                    <li>방송 전파사항 들어야 하니 이어폰 한쪽만 끼거나 볼륨 적절히 조정하기</li>
-                    <li>식사이동 등 이동시에는 분대건제 유지해서 다니기</li>
-                    <li>식사집합/일과집합 등 집합 시 시간 엄수하기 (3분 전)</li>
-                    <li>일과시간엔 침대에 눕거나 TV 시청 노노</li>
-                    <li>체단시간에 생활관에 누워있기도 노노</li>
-                    <li>상하기 음악 나오면 멈추고 소리 나오는 방향 바라보기</li>
-                    <li>급식에 유제품 나온거 있으면 가급적 식당에서 먹기. 쇼케이스에 보관 금지</li>
-                    <li>점호대기시간 때 너무 시끄럽게 떠들지 말기</li>
-                    <li>연등 시 종료시각 잘 쓰고 마지막으로 나올 때 불이랑 냉난방 끄기</li>
-                    <li>싸지방 연등은 대장님 허락 하 가능</li>
-                    <li>혼복은 지양</li>
-                    <li><span class="highlight">* 외출/외박 신청은 가급적 2주 전에, 최소한 1주 전에 반드시 신청하기!!! *</span></li>
-                    <li>출타복귀는 여유있게 하기. 가끔 편의점 봉지에 들고오면 걸리기도 하니 가방에 넣고 오기</li>
-                    <li>외출/외박 변경 시 행정병에게 말하고 변경</li>
-                    <li><span class="highlight">** 근무 변경시 반드시 소대장님한테 보고하고 변경하기 **</span></li>
+                    <li>일과시간 중 취식 자제 (음료 및 다과는 점심시간이나 개인정비 시간 활용)</li>
+                    <li>PX, 자판기, 체력단련실은 자유롭게 이용 가능</li>
+                    <li>세탁방은 자유롭게 이용하되, 인원 대비 기기가 부족하므로 세탁 및 건조 완료 시 신속히 비워주기</li>
+                    <li>관물대 모자 정리: 가장 좌측에 비치하며 챙이 입구를 향하도록 정렬 (아래부터: 근무모 / 기타 모자 / 전투모 / 베레모 순)</li>
+                    <li>관물대 대각 정리: 가장 우측에 일자(I) 대각 비치 (아래부터: 훈련용 흰대각 / 행사용 흰대각 / 갈색 대각 순)</li>
+                    <li>관물대 뒤쪽 여유 공간에 수통과 X대각을 단정하게 정리하여 비치</li>
+                    <li>의류는 좌측부터 패딩, 방상외피, 방한복 상의 내피(깔깔이), 플리스, 전투복 순으로 좌수걸이하여 보관</li>
+                    <li>취식물 보관: 음료는 쇼케이스, 기타 식품은 출타 가방에 보관</li>
+                    <li>행사복 관리: 샤워 바구니 걸이를 활용해 행사복 걸이를 만들고, 행사 종료 시 행사복은 피복실에 반납 및 걸이 원위치</li>
+                    <li>침상 위와 개인 자리는 항상 청결하고 단정하게 유지 (사용한 자리 즉시 정돈)</li>
+                    <li>생활관 최종 퇴실 시 소등 및 출입문 닫기 철저</li>
+                    <li>방송 전파사항 수신을 위해 이어폰은 한쪽만 착용하거나 적절한 볼륨 유지</li>
+                    <li>식사 등 부대 내 이동 시 분대 건제 유지</li>
+                    <li>식사 및 일과 등 집합 시간 엄수 (집합 3분 전 도착)</li>
+                    <li>일과 및 체력단련 시간에 침상에 눕거나 TV 시청 금지</li>
+                    <li>국기 상하기(국기에 대한 경례) 음악 송출 시, 제자리에 멈춰 서서 국기 게양대 방향을 향해 경례</li>
+                    <li>급식으로 제공된 유제품은 식당에서 취식 권장 (쇼케이스 보관 지양)</li>
+                    <li>점호 대기 중 정숙 유지</li>
+                    <li>연등(야간점호 후 활동) 시 종료 시각을 정확히 기재하고, 최종 퇴실자는 소등 및 냉·난방기 전원 차단</li>
+                    <li>사이버지식정보방(싸지방) 연등은 중대장님 승인 하에 이용 가능</li>
+                    <li>혼합 복장(혼복) 착용 지양</li>
+                    <li><span class="highlight">외출 및 외박 신청은 가급적 2주 전, 늦어도 1주 전까지 반드시 완료할 것!</span></li>
+                    <li>출타 복귀 시 시간적 여유를 두고 복귀 (구매한 물품은 편의점 봉투 대신 개인 가방에 넣어 복귀 권장)</li>
+                    <li>외출/외박 일정 변경 시 사전에 행정병에게 통보</li>
+                    <li><span class="highlight">근무 변경 시 반드시 소대장님께 사전 보고 후 조치할 것!</span></li>
                 </ol>
             `
         },
@@ -430,19 +488,19 @@
             title: "행사/훈련편",
             html: `
                 <div class="notice-box">
-                    !!육군을 대표하는 부대로서 행사에서만큼은 절대 부끄럽게 행동해서는 안됨!!
+                    !! 대한민국 육군을 대표하는 부대로서, 행사 중에는 항상 품위를 유지할 것 !!
                 </div>
                 <ol class="custom-list">
-                    <li>훈련때 온도에 따라 전투복 벗거나 입을 수 있음. 대신 팔 풀 때 조교에게 말씀드리고 하기</li>
-                    <li>마찬가지로 옷 매무새 정리하거나 마스크 정리할때도 팔 풀 때 조교에게 말씀드리고 뒤로돌아 상태에서 정리하기</li>
-                    <li><span class="highlight">** 행사복 바지는 반드시 분대장에게 검사받기 **</span> 빠를수록 좋음. 늦어도 5일 전엔 검사 받는다고 생각하기</li>
-                    <li>두발도 행사 이틀 전까진 정리하기. 이발실 정리 잘 하고 다니기</li>
-                    <li>행사 당일 이동 시 버스에 등 기대지 않기 => 땀이나 기타 이물질이 행사복에 묻어나올 수 있기 때문</li>
-                    <li>버스에서는 안전상 이유료 역착검 하기</li>
-                    <li>행사장 도착해서는 구령에 따라 발 맞춰 걷기</li>
-                    <li>행사 시 애국가/군가 제창 시엔 크게 부르기</li>
-                    <li>행사장에선 개인 행동 절대 금지</li>
-                    <li>국기에 대하여 경례시 충성 절대 금지</li>
+                    <li>훈련 중 기온에 따라 전투복을 입거나 벗을 수 있으나, 자세(팔)를 풀 때는 반드시 조교에게 사전 보고</li>
+                    <li>복장 및 마스크 매무새 정비가 필요할 때도 조교에게 보고 후, 뒤로 돌아선 상태에서 신속히 정비</li>
+                    <li><span class="highlight">행사복 하의는 반드시 분대장에게 사전 검사 받기</span> (빠를수록 좋으며, 최소 행사 5일 전까지 완료 권장)</li>
+                    <li>행사 이틀 전까지 두발 정리 완료 (이발실 사용 후 뒷정리 철저)</li>
+                    <li>행사 당일 차량 이동 시 좌석 등받이에 등 기대지 않기 (땀 등 이물질로 인한 행사복 오염 방지)</li>
+                    <li>버스 탑승 시 안전사고 예방을 위해 역착검(칼집을 반대로 차는 것) 상태 유지</li>
+                    <li>행사장 도착 후 이동 시에는 구령에 맞춰 오와 열을 맞추어 행진</li>
+                    <li>행사 중 애국가 및 군가 제창 시에는 크고 패기 있는 목소리로 부르기</li>
+                    <li>행사장 내에서 개인 행동 및 무단 이탈 절대 금지</li>
+                    <li>국기에 대한 경례 시 '충성' 구호 절대 생략 (무음 경례)</li>
                 </ol>
             `
         },
@@ -456,7 +514,7 @@
         {
             title: "군조가",
             artist: "의장대군가",
-            src: "https://0o0o0o1.github.io/honerGuard/song3.m4a", // 오디오 파일 경로 확인 필요
+            src: "song3.m4a",
             lyrics: [
                 { time: 0, text: "반짝이는 백철모-에 / 명예를 걸고요" },
                 { time: 7, text: "(붐빠붐빠 붐빠붐빠) 행진 속에 / 청춘은 갑니다" },
@@ -475,7 +533,7 @@
         {
             title: "의장대가",
             artist: "의장대군가",
-            src: "https://0o0o0o1.github.io/honerGuard/song1.m4a", // 오디오 파일 경로 확인 필요
+            src: "song1.m4a",
             lyrics: [
                 { time: 0, text: "찬란한 전통과 빛을 이-을(헤이)" },
                 { time: 5, text: "나는대한 건-아" },
@@ -502,7 +560,7 @@
         {
             title: "계룡산 호랑이",
             artist: "의장대군가",
-            src: "https://0o0o0o1.github.io/honerGuard/song2.m4a", // 오디오 파일 경로 확인 필요
+            src: "song2.m4a",
             lyrics: [
                 { time: 0, text: "계룡산 정기뻗어 여기에 맺히고" },
                 { time: 8, text: "백-두화랑 정통받은 대한육군 의장대" },
@@ -547,14 +605,41 @@
     function initPlayer() {
         audioPlayer = document.getElementById('audio-player');
         
-        // 오디오 이벤트 리스너 등록
+        audioPlayer.removeEventListener('timeupdate', updateProgress);
         audioPlayer.addEventListener('timeupdate', updateProgress);
         audioPlayer.addEventListener('loadedmetadata', () => {
             document.getElementById('total-time').innerText = formatTime(audioPlayer.duration);
         });
-        audioPlayer.addEventListener('ended', nextSong);
+        audioPlayer.addEventListener('ended', () => {
+            resetPlayerUI();
+        });
         
         loadSong(currentSongIndex);
+        updateTabsUI();
+    }
+
+    function selectSong(index) {
+        if (currentSongIndex === index) return;
+        currentSongIndex = index;
+        loadSong(index);
+        updateTabsUI();
+        
+        // 탭 변경 시 자동 재생
+        audioPlayer.play().then(() => {
+            isPlaying = true;
+            document.getElementById('play-btn').innerHTML = '&#10074;&#10074;';
+        }).catch(e => console.log("Autoplay blocked:", e));
+    }
+
+    function updateTabsUI() {
+        const tabs = document.querySelectorAll('.song-tab');
+        tabs.forEach((tab, i) => {
+            if (i === currentSongIndex) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
     }
 
     function loadSong(index) {
@@ -562,14 +647,13 @@
         document.getElementById('song-title').innerText = song.title;
         document.getElementById('song-artist').innerText = song.artist;
         
-        // 오디오 소스 변경
         audioPlayer.src = song.src;
         audioPlayer.load();
         
         const lyricsContainer = document.getElementById('lyrics-container');
         lyricsContainer.innerHTML = '';
         
-        song.lyrics.forEach((line, i) => {
+        song.lyrics.forEach((line) => {
             const el = document.createElement('div');
             el.className = 'lyric-line';
             el.innerText = line.text;
@@ -579,6 +663,12 @@
         
         document.getElementById('current-time').innerText = "0:00";
         document.getElementById('progress-bar-fill').style.width = '0%';
+        
+        if(isPlaying) {
+            document.getElementById('play-btn').innerHTML = '&#10074;&#10074;';
+        } else {
+            document.getElementById('play-btn').innerHTML = '&#9654;';
+        }
     }
 
     function togglePlay() {
@@ -586,11 +676,11 @@
         if (audioPlayer.paused) {
             audioPlayer.play();
             isPlaying = true;
-            btn.innerHTML = '&#10074;&#10074;'; // Pause icon
+            btn.innerHTML = '&#10074;&#10074;';
         } else {
             audioPlayer.pause();
             isPlaying = false;
-            btn.innerHTML = '&#9654;'; // Play icon
+            btn.innerHTML = '&#9654;';
         }
     }
 
@@ -600,6 +690,15 @@
             audioPlayer.currentTime = 0;
         }
         isPlaying = false;
+        currentSongIndex = 0; // 돌아갈때 초기화
+    }
+
+    function resetPlayerUI() {
+        isPlaying = false;
+        document.getElementById('play-btn').innerHTML = '&#9654;';
+        audioPlayer.currentTime = 0;
+        document.getElementById('progress-bar-fill').style.width = '0%';
+        document.getElementById('current-time').innerText = "0:00";
     }
 
     function updateProgress() {
@@ -627,6 +726,7 @@
             if (index === activeIndex) {
                 if (!line.classList.contains('active')) {
                     line.classList.add('active');
+                    // 가사가 부드럽게 중앙에 오도록 스크롤 조절
                     line.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             } else {
@@ -640,22 +740,6 @@
         const m = Math.floor(seconds / 60);
         const s = Math.floor(seconds % 60);
         return m + ":" + (s < 10 ? '0' : '') + s;
-    }
-
-    function nextSong() {
-        currentSongIndex = (currentSongIndex + 1) % songs.length;
-        loadSong(currentSongIndex);
-        if (isPlaying) {
-            audioPlayer.play();
-        }
-    }
-
-    function prevSong() {
-        currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-        loadSong(currentSongIndex);
-        if (isPlaying) {
-            audioPlayer.play();
-        }
     }
 
     function jumpToTime(time) {
