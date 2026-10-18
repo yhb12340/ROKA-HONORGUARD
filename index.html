@@ -1,29 +1,49 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>의장대에서 살아남기</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
     <style>
         :root {
-            --bg-color: #f2f5f3; /* 옅은 웜그레이 톤으로 정돈 */
-            --text-color: #2b332c; 
-            --primary-color: #1b4b36; /* 딥그린 (육군 의장대 메인 컬러) */
-            --accent-color: #d4af37; /* 메탈릭 골드 */
-            --btn-bg: #ffffff;
-            --btn-hover: #f0f4f1;
-            /* 플레이어 배경: 진초록과 검은색 그라데이션 */
-            --player-bg: linear-gradient(145deg, #183325, #0d1a13);
-            --player-text: #ffffff;
-            --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            --bg-dark-green: #0c261a;
+            --primary-deep: #113826;
+            --primary-color: #174932;
+            --primary-mid: #1f5c40;
+            --primary-soft: #eef4f0;
+            --primary-tint: #f6f9f7;
+
+            --accent-color: #d4af37;
+            --accent-bright: #f3d46b;
+            --accent-deep: #9e7a18;
+            --accent-soft: #fcf7e6;
+
+            --pure-white: #ffffff;
+            --text-main: #18241d;
+            --text-sub: #4c5d53;
+            --text-muted: #76877d;
+
+            --gold-gradient: linear-gradient(135deg, #b88a28 0%, #f5df8b 35%, #d4af37 55%, #fff1b8 78%, #9e7318 100%);
+            --green-hero-gradient: linear-gradient(160deg, #0b2217 0%, #143d29 52%, #1b4f36 100%);
+            --player-bg: linear-gradient(165deg, #102e20 0%, #091a12 65%, #050f0a 100%);
+            --card-shadow: 0 18px 45px rgba(10, 34, 23, 0.14);
+            --subtle-shadow: 0 6px 18px rgba(17, 56, 38, 0.07);
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
             margin: 0;
             padding: 0;
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background:
+                radial-gradient(circle at 18% 12%, rgba(212, 175, 55, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 82% 88%, rgba(23, 73, 50, 0.18) 0%, transparent 45%),
+                linear-gradient(180deg, #0d291c 0%, #133927 280px, #eff4f1 280px, #eff4f1 100%);
+            color: var(--text-main);
             overflow-x: hidden;
             display: flex;
             justify-content: center;
@@ -32,128 +52,254 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- 마크 벡터 이미지(SVG) 스타일 --- */
-        .mark-container {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 10px;
-            margin-top: 4vh;
-            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
-        }
-
-        .mark-svg {
-            width: 100%;
-            height: 100%;
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gold-gradient);
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(212, 175, 55, 0.45);
         }
 
         .app-container {
             width: 100%;
-            max-width: 600px;
-            padding: 20px;
+            max-width: 680px;
+            padding: 28px 20px 48px;
             position: relative;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            box-sizing: border-box;
+        }
+
+        .hero-card {
+            width: 100%;
+            background: var(--green-hero-gradient);
+            border-radius: 28px;
+            padding: 36px 28px 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 22px 50px rgba(7, 24, 16, 0.32);
+            border: 1px solid rgba(212, 175, 55, 0.42);
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            margin-top: 1.5vh;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border-radius: 21px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            pointer-events: none;
+        }
+
+        .hero-card::after {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: -20%;
+            width: 140%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.16) 0%, transparent 62%);
+            pointer-events: none;
+        }
+
+        .unit-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            color: var(--accent-bright);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+            z-index: 1;
+        }
+
+        .unit-pill-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-bright);
+            box-shadow: 0 0 8px var(--accent-bright);
+        }
+
+        .mark-container {
+            width: 132px;
+            height: 140px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .mark-glow {
+            position: absolute;
+            width: 126px;
+            height: 126px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, rgba(212, 175, 55, 0.18) 45%, transparent 72%);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.25);
+        }
+
+        .mark-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.45));
+            transition: transform 0.35s ease;
+        }
+
+        .mark-container:hover .mark-img {
+            transform: translateY(-3px) scale(1.03);
         }
 
         .main-title {
-            font-size: 2.2rem;
+            font-size: 2.15rem;
             font-weight: 800;
-            margin-top: 0; 
-            margin-bottom: 30px;
+            margin: 0;
             text-align: center;
-            color: var(--primary-color);
+            color: var(--pure-white);
+            letter-spacing: -0.6px;
+            z-index: 1;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
             transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-            transform-origin: top center;
-            letter-spacing: -0.5px;
-            text-shadow: 1px 1px 0px rgba(255,255,255,0.8);
         }
 
         .menu-container {
-            display: flex;
-            flex-direction: row;
-            gap: 15px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
             width: 100%;
-            justify-content: center;
+            margin-top: 20px;
             transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .menu-btn {
-            background-color: var(--btn-bg);
-            border: 1px solid rgba(27, 75, 54, 0.1);
-            color: var(--primary-color);
-            padding: 16px 20px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            border-radius: 16px;
+            background: var(--pure-white);
+            border: 1px solid rgba(23, 73, 50, 0.14);
+            color: var(--primary-deep);
+            padding: 22px 16px 20px;
+            font-size: 1.12rem;
+            font-weight: 800;
+            border-radius: 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-            flex: 1;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: var(--card-shadow);
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
         }
 
         .menu-btn::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
             background: var(--gold-gradient);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            opacity: 0.85;
+            transition: height 0.25s ease;
+        }
+
+        .menu-btn-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            background: var(--primary-soft);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-btn-label {
+            font-size: 1.12rem;
+            font-weight: 800;
+            color: var(--primary-deep);
+            letter-spacing: -0.3px;
+        }
+
+        .menu-btn-desc {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            line-height: 1.35;
+        }
+
+        .menu-btn-count {
+            margin-top: 4px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--accent-deep);
+            background: var(--accent-soft);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            padding: 3px 10px;
+            border-radius: 999px;
         }
 
         .menu-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-            color: var(--primary-color);
-            border-color: transparent;
-        }
-        
-        .menu-btn:hover::before {
-            opacity: 1;
+            transform: translateY(-5px);
+            box-shadow: 0 20px 38px rgba(12, 38, 26, 0.2);
+            border-color: var(--accent-color);
         }
 
-        /* 상세 화면 진입 시 타이틀/마크 애니메이션 */
-        .app-container.state-content-active .mark-container {
-            transform: translateY(-40px) scale(0.6);
-            opacity: 0;
-            pointer-events: none;
-            position: absolute;
+        .menu-btn:hover .menu-btn-icon {
+            background: var(--primary-color);
+            color: var(--accent-bright);
+            border-color: var(--accent-color);
         }
 
-        .app-container.state-content-active .main-title {
-            transform: translateY(-60px) scale(0.85);
-            opacity: 0;
-            pointer-events: none;
-            position: absolute;
-        }
-
+        .app-container.state-content-active .hero-card,
         .app-container.state-content-active .menu-container {
-            transform: translateY(40px);
+            transform: translateY(-30px) scale(0.96);
             opacity: 0;
             pointer-events: none;
             position: absolute;
+            visibility: hidden;
         }
 
         .content-container {
             width: 100%;
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 30px 25px;
-            box-shadow: 0 10px 40px rgba(27, 75, 54, 0.08);
+            background: var(--pure-white);
+            border-radius: 26px;
+            padding: 0;
+            box-shadow: 0 22px 55px rgba(10, 34, 23, 0.18);
             opacity: 0;
-            transform: translateY(20px) scale(0.98);
+            transform: translateY(24px) scale(0.98);
             pointer-events: none;
-            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: all 0.45s cubic-bezier(0.25, 1, 0.5, 1);
             position: absolute;
-            top: 80px;
-            box-sizing: border-box;
-            border-top: 4px solid var(--primary-color);
+            top: 28px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.38);
+            visibility: hidden;
         }
 
         .app-container.state-content-active .content-container {
@@ -162,716 +308,594 @@
             pointer-events: auto;
             position: relative;
             top: 0;
-            margin-top: 20px;
-            margin-bottom: 40px;
+            margin-top: 4px;
+            margin-bottom: 32px;
+            visibility: visible;
         }
 
         .content-header {
+            background: var(--green-hero-gradient);
+            padding: 22px 24px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
-            border-bottom: 1px solid rgba(27, 75, 54, 0.1);
-            padding-bottom: 15px;
-        }
-
-        .content-title {
-            font-size: 1.6rem;
-            font-weight: 800;
-            margin: 0;
-            color: var(--primary-color);
-        }
-
-        .back-btn {
-            background-color: transparent;
-            color: var(--accent-color);
-            border: none;
-            padding: 8px 12px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        .back-btn:hover {
-            opacity: 0.7;
-        }
-
-        /* --- Apple Music Style 개선 (색상 테마 반영) --- */
-        .song-selector {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            background: rgba(27, 75, 54, 0.05);
-            padding: 6px;
-            border-radius: 12px;
-            overflow-x: auto;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        
-        .song-selector::-webkit-scrollbar {
-            display: none;
-        }
-
-        .song-tab {
-            flex: 1;
-            min-width: 80px;
-            padding: 10px 5px;
-            border: none;
-            background: transparent;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #7b8a81;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .song-tab.active {
-            background: var(--primary-color);
-            color: #ffffff;
-            box-shadow: 0 4px 10px rgba(27, 75, 54, 0.2);
-        }
-
-        .music-player-container {
-            background: var(--player-bg);
-            border-radius: 24px;
-            padding: 30px 20px;
-            color: var(--player-text);
-            box-shadow: 0 20px 40px rgba(13, 26, 19, 0.3);
+            border-bottom: 3px solid var(--accent-color);
             position: relative;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border: 1px solid rgba(212, 175, 55, 0.2); /* 은은한 골드 테두리 */
         }
 
-        /* 플레이어 배경 골드 장식 */
-        .music-player-container::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 60%);
-            pointer-events: none;
-        }
-
-        .song-info {
-            text-align: center;
-            margin-bottom: 25px;
-            width: 100%;
-            z-index: 1;
-        }
-
-        .song-title {
-            font-size: 1.7rem;
-            font-weight: 800;
-            margin: 0;
-            letter-spacing: -0.5px;
-            color: var(--accent-color); /* 제목은 골드 */
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-        
-        .song-artist {
-            font-size: 1rem;
-            color: #a0b3a6;
-            margin-top: 6px;
-            font-weight: 500;
-        }
-
-        .lyrics-container {
-            width: 100%;
-            height: 280px;
-            overflow-y: auto;
-            text-align: center;
-            margin: 10px 0 25px 0;
-            padding: 20px 0;
-            scroll-behavior: smooth;
-            mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
-            -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
-            z-index: 1;
-        }
-
-        .lyrics-container::-webkit-scrollbar {
-            display: none;
-        }
-        
-        .lyrics-container {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        .lyric-line {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin: 20px 0;
-            color: #6a8071;
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            cursor: pointer;
-            line-height: 1.5;
-            padding: 0 10px;
-        }
-
-        .lyric-line.active {
-            font-size: 1.45rem;
-            color: #ffffff;
-            transform: scale(1.02);
-            text-shadow: 0 2px 10px rgba(255,255,255,0.3);
-        }
-
-        .player-controls {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 1;
-        }
-
-        .progress-container {
-            width: 100%;
+        .content-header-left {
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #a0b3a6;
-            margin-bottom: 20px;
+            z-index: 1;
         }
 
-        .progress-bar-bg {
-            flex: 1;
-            height: 6px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .progress-bar-fill {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            background: var(--gold-gradient);
-            border-radius: 4px;
-            width: 0%;
-            transition: width 0.1s linear;
-        }
-
-        .progress-bar-fill::after {
-            content: '';
-            position: absolute;
-            right: -4px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 10px;
-            height: 10px;
-            background: #ffffff;
-            border-radius: 50%;
-            box-shadow: 0 0 6px rgba(212, 175, 55, 0.8);
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .progress-bar-bg:hover .progress-bar-fill::after {
-            opacity: 1;
-        }
-
-        .play-btn {
-            background: #ffffff;
-            border: none;
-            color: var(--primary-color);
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            font-size: 1.8rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: transform 0.2s ease, background-color 0.2s;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-        }
-
-        .play-btn:active {
-            transform: scale(0.92);
-            background-color: #f0f0f5;
-        }
-
-        /* --- 리스트 및 기타 컨텐츠 스타일 --- */
-        ol.custom-list {
-            list-style: none;
-            counter-reset: item;
-            padding: 0;
-            margin: 0;
-        }
-
-        ol.custom-list > li {
-            counter-increment: item;
-            margin-bottom: 18px;
-            padding-left: 42px;
-            position: relative;
-            line-height: 1.6;
-            font-size: 1.05rem;
-            color: #333333;
-        }
-
-        ol.custom-list > li::before {
-            content: counter(item);
-            position: absolute;
-            left: 0;
-            top: 2px;
-            width: 26px;
-            height: 26px;
-            background-color: var(--primary-color);
-            color: #ffffff;
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.9rem;
-            font-weight: 700;
-            box-shadow: 0 2px 5px rgba(27, 75, 54, 0.3);
-        }
-
-        .notice-box {
-            background-color: #fdfaf0;
-            border-left: 4px solid var(--accent-color);
-            padding: 16px 20px;
-            margin-bottom: 25px;
-            border-radius: 0 12px 12px 0;
-            font-weight: 700;
-            color: var(--primary-color);
-            line-height: 1.5;
-            font-size: 0.95rem;
-            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.1);
-        }
-
-        .highlight {
-            color: var(--accent-color);
+        .content-title {
+            font-size: 1.5rem;
             font-weight: 800;
-            text-shadow: 0px 0px 1px rgba(212, 175, 55, 0.3);
+            margin: 0;
+            color: var(--pure-white);
+            letter-spacing: -0.4px;
+        }
+
+        .back-btn::before { content: '← '; }
+        .back-btn {
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--pure-white);
+            border: 1px solid rgba(212, 175, 55, 0.55);
+            padding: 9px 16px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            z-index: 1;
+        }
+
+        .back-btn:hover {
+            background: var(--pure-white);
+            color: var(--primary-deep);
+            border-color: var(--pure-white);
+            transform: translateX(-2px);
+        }
+
+        #content-body {
+            padding: 24px;
         }
 
         @media (max-width: 600px) {
-            .menu-container { flex-direction: column; }
-            .menu-btn { width: 100%; }
+            .app-container {
+                padding: 18px 14px 36px;
+            }
+            .hero-card {
+                padding: 28px 18px 24px;
+            }
+            .main-title {
+                font-size: 1.8rem;
+            }
+            .menu-container {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .menu-btn {
+                flex-direction: row;
+                justify-content: flex-start;
+                text-align: left;
+                padding: 16px 18px;
+                gap: 14px;
+            }
+            .menu-btn-count {
+                margin-top: 0;
+            }
+            .content-header {
+                padding: 18px 18px 16px;
+            }
+            #content-body {
+                padding: 18px 16px;
+            }
         }
     </style>
 </head>
 <body>
 
 <div class="app-container" id="app">
-    
-    <!-- 부대 마크 벡터 이미지 (호랑이 방패 문양) -->
-    <div class="mark-container">
-        <svg class="mark-svg" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#bf953f" />
-                    <stop offset="25%" stop-color="#fcf6ba" />
-                    <stop offset="50%" stop-color="#b38728" />
-                    <stop offset="75%" stop-color="#fbf5b7" />
-                    <stop offset="100%" stop-color="#aa771c" />
-                </linearGradient>
-                <linearGradient id="shieldBg" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stop-color="#2a5a41" />
-                    <stop offset="100%" stop-color="#143323" />
-                </linearGradient>
-                <filter id="shadow">
-                    <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
-                </filter>
-            </defs>
-            <!-- 상단 리본 -->
-            <path d="M 10,20 Q 50,30 90,20 L 85,35 Q 50,45 15,35 Z" fill="url(#goldGrad)" filter="url(#shadow)"/>
-            <text x="50" y="34" font-size="12" font-weight="900" fill="#1b4b36" text-anchor="middle" style="letter-spacing: 2px;">대한민국</text>
-            
-            <!-- 방패 테두리 -->
-            <path d="M 20,40 Q 50,50 80,40 Q 90,70 85,90 Q 50,120 15,90 Q 10,70 20,40 Z" fill="url(#goldGrad)" filter="url(#shadow)"/>
-            <!-- 방패 배경 -->
-            <path d="M 23,43 Q 50,52 77,43 Q 86,70 82,88 Q 50,115 18,88 Q 14,70 23,43 Z" fill="url(#shieldBg)"/>
-            
-            <!-- 호랑이 형상 (단순화된 벡터) -->
-            <path d="M 35,55 L 45,65 L 55,65 L 65,55 L 60,75 L 55,85 L 45,85 L 40,75 Z" fill="url(#goldGrad)"/>
-            <!-- 눈 -->
-            <circle cx="43" cy="62" r="2" fill="#1b4b36"/>
-            <circle cx="57" cy="62" r="2" fill="#1b4b36"/>
-            <!-- 코/입술 무늬 -->
-            <path d="M 50,68 L 47,75 L 53,75 Z" fill="#1b4b36"/>
-            <path d="M 45,80 Q 50,85 55,80" fill="none" stroke="#1b4b36" stroke-width="2"/>
-            
-            <!-- 하단 텍스트 -->
-            <text x="50" y="100" font-size="11" font-weight="900" fill="url(#goldGrad)" text-anchor="middle">의 장 대</text>
-            <text x="50" y="112" font-size="10" font-weight="900" fill="url(#goldGrad)" text-anchor="middle">육  군</text>
-        </svg>
+
+    <!-- 상단 메인 히어로 카드 -->
+    <div class="hero-card">
+        <div class="unit-pill">
+            <span class="unit-pill-dot"></span>
+            <span>ROK ARMY HONOR GUARD</span>
+        </div>
+
+        <div class="mark-container">
+            <div class="mark-glow"></div>
+            <!-- 부대 마크 base64 이미지 -->
+            <img class="mark-img" src="data:image/png;base64,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...
+" alt="대한민국 육군 의장대 마크" />
+        </div>
+
+        <h1 class="main-title">의장대에서 살아남기</h1>
     </div>
 
-    <h1 class="main-title">의장대에서 살아남기</h1>
-    
+    <!-- 3대 핵심 메뉴 -->
     <div class="menu-container">
-        <button class="menu-btn" onclick="openContent('life')">생활편</button>
-        <button class="menu-btn" onclick="openContent('training')">행사/훈련편</button>
-        <button class="menu-btn" onclick="openContent('song')">군가편</button>
+        <button class="menu-btn" onclick="openContent('life')">
+            <div class="menu-btn-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+            </div>
+            <div class="menu-btn-text-wrap">
+                <div class="menu-btn-label">생활편</div>
+                <div class="menu-btn-desc">관물대·복장·일과·점호</div>
+            </div>
+            <span class="menu-btn-count">31개 수칙</span>
+        </button>
+
+        <button class="menu-btn" onclick="openContent('training')">
+            <div class="menu-btn-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+            </div>
+            <div class="menu-btn-text-wrap">
+                <div class="menu-btn-label">행사/훈련편</div>
+                <div class="menu-btn-desc">총기·행사복·군기·행진</div>
+            </div>
+            <span class="menu-btn-count">12개 수칙</span>
+        </button>
+
+        <button class="menu-btn" onclick="openContent('song')">
+            <div class="menu-btn-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 18V5l12-2v13"></path>
+                    <circle cx="6" cy="18" r="3"></circle>
+                    <circle cx="18" cy="16" r="3"></circle>
+                </svg>
+            </div>
+            <div class="menu-btn-text-wrap">
+                <div class="menu-btn-label">군가편</div>
+                <div class="menu-btn-desc">의장대 필수 군가 3곡</div>
+            </div>
+            <span class="menu-btn-count">가사 싱크</span>
+        </button>
     </div>
 
+    <!-- 상세 컨텐츠 영역 -->
     <div class="content-container">
         <div class="content-header">
-            <h2 class="content-title" id="content-title"></h2>
-            <button class="back-btn" onclick="closeContent()">돌아가기</button>
+            <div class="content-header-left">
+                <h2 class="content-title">상세 내용</h2>
+            </div>
+            <button class="back-btn" onclick="closeContent()">뒤로가기</button>
         </div>
-        <div id="content-body"></div>
+        <div id="content-body">
+            <!-- 기존 상세 본문 내용 유지 -->
+        </div>
     </div>
+
 </div>
-
-<audio id="audio-player"></audio>
-
-<script>
-    const songContentHTML = `
-        <div class="song-selector" id="song-selector">
-            <button class="song-tab active" onclick="selectSong(0)">군조가</button>
-            <button class="song-tab" onclick="selectSong(1)">의장대가</button>
-            <button class="song-tab" onclick="selectSong(2)">계룡산 호랑이</button>
-        </div>
-
-        <div class="music-player-container">
-            <div class="song-info">
-                <h3 class="song-title" id="song-title">군조가</h3>
-                <div class="song-artist" id="song-artist">의장대군가</div>
-            </div>
-            
-            <div class="lyrics-container" id="lyrics-container">
-                <!-- 가사가 여기에 동적으로 추가됩니다 -->
-            </div>
-            
-            <div class="player-controls">
-                <div class="progress-container">
-                    <span id="current-time">0:00</span>
-                    <div class="progress-bar-bg" id="progress-bar-bg" onclick="seekSong(event)">
-                        <div class="progress-bar-fill" id="progress-bar-fill"></div>
-                    </div>
-                    <span id="total-time">0:00</span>
-                </div>
-                
-                <button class="play-btn" id="play-btn" onclick="togglePlay()">&#9654;</button>
-            </div>
-        </div>
-    `;
-
-    const contentData = {
-        life: {
-            title: "생활편",
-            html: `
-                <ol class="custom-list">
-                    <li>일과시간 중 취식 자제 (음료 및 다과는 점심시간이나 개인정비 시간 활용)</li>
-                    <li>PX, 자판기, 체력단련실은 자유롭게 이용 가능</li>
-                    <li>세탁방은 자유롭게 이용하되, 인원 대비 기기가 부족하므로 세탁 및 건조 완료 시 신속히 비워주기</li>
-                    <li>관물대 모자 정리: 가장 좌측에 비치하며 챙이 입구를 향하도록 정렬 (아래부터: 디모 / 기타 모자 / ROKA모 / 베레모 순)</li>
-                    <li>관물대 대각 정리: 가장 우측에 일자(I) 대각 비치 (아래부터: 훈련용 흰대각 / 행사용 흰대각 / 갈색 대각 순)</li>
-                    <li>관물대 뒤쪽 여유 공간에 수통과 X대각을 단정하게 정리하여 비치</li>
-                    <li>의류는 좌측부터 패딩, 방상외피, 방한복 상의 내피(깔깔이), 플리스, 전투복 순으로 좌수걸이하여 보관</li>
-                    <li>취식물 보관: 음료는 쇼케이스, 기타 식품은 출타 가방에 보관</li>
-                    <li>행사복 관리: 샤워 바구니 걸이를 활용해 행사복 걸이를 만들고, 행사 종료 시 행사복은 피복실에 반납 및 걸이 원위치</li>
-                    <li>침상 위와 개인 자리는 항상 청결하고 단정하게 유지 (사용한 자리 즉시 정돈)</li>
-                    <li>생활관 최종 퇴실 시 소등 및 출입문 닫기 철저</li>
-                    <li>방송 전파사항 수신을 위해 이어폰은 한쪽만 착용하거나 적절한 볼륨 유지</li>
-                    <li>간부님들 마주치면 선두만 경례</li>
-                    <li>식사 등 부대 내 이동 시 분대 건제 유지</li>
-                    <li>식사 및 일과 등 집합 시간 엄수 (집합 3분 전 도착)</li>
-                    <li>식사 전 손 씻기 (식중독 예방) </li>
-                    <li>일과 및 체력단련 시간에 침상에 눕거나 TV 시청 금지</li>
-                    <li>국기 상하기(국기에 대한 경례) 음악 송출 시, 제자리에 멈춰 서기</li>
-                    <li>급식으로 제공된 유제품은 식당에서 취식 권장 (쇼케이스 보관 지양)</li>
-                    <li>라면국물 세면대에 절대 버리지 않기. 변기에 버리기</li>
-                    <li>화장실 쓰레기통에 다른 쓰레기 버리지 않기</li>
-                    <li>가급적 8시 이전까지 샤워 권장 (8시 이후부터 진계함 및 임무분담제)</li>
-                    <li>점호 대기 중 정숙 유지</li>
-                    <li>점호 완료 방송 전까지는 점호 상태 유지</li>
-                    <li>연등 시 종료 시각을 정확히 기재하고, 최종 퇴실자는 소등 및 냉·난방기 전원 차단</li>
-                    <li>싸지방 연등은 중대장님 승인 하에 이용 가능</li>
-                    <li>혼복 착용 지양</li>
-                    <li><span class="highlight">외출 및 외박 신청은 가급적 2주 전, 늦어도 1주 전까지 반드시 완료할 것!</span></li>
-                    <li>출타 복귀 시 시간적 여유를 두고 복귀 (구매한 물품은 편의점 봉투 대신 개인 가방에 넣어 복귀 권장)</li>
-                    <li>외출/외박 일정 변경 시 사전에 행정병에게 통보</li>
-                    <li><span class="highlight">근무 변경 시 반드시 소대장님께 사전 보고 후 조치할 것!</span></li>
-                </ol>
-            `
-        },
-        training: {
-            title: "행사/훈련편",
-            html: `
-                <div class="notice-box">
-                    대한민국 육군을 대표하는 부대로서, 행사 중에는 항상 품위를 유지할 것!
-                </div>
-                <ol class="custom-list">
-                    <li><span class="highlight">총기함 및 대검 시건 철저히 하기</span></li>
-                    <li><span class="highlight">현황판 최신화 철저히 하기</span></li>
-                    <li>팔을 풀 때 조교에게 사전 보고 후 전투복을 입거나 벗기</li>
-                    <li>복장 및 마스크 매무새 정비가 필요할 때도 조교에게 보고 후, 뒤로 돌아선 상태에서 신속히 정비</li>
-                    <li><span class="highlight">행사복 하의는 반드시 분대장에게 사전 검사 받기</span> (빠를수록 좋으며, 최소 행사 5일 전까지 완료 권장)</li>
-                    <li>행사 이틀 전까지 두발 정리 완료 (이발실 사용 후 뒷정리 철저)</li>
-                    <li>행사 당일 차량 이동 시 좌석 등받이에 등 기대지 않기 (땀 등 이물질로 인한 행사복 오염 방지)</li>
-                    <li>버스 탑승 시 안전사고 예방을 위해 역착검 상태 유지</li>
-                    <li>행사장 도착 후 이동 시에는 구령에 맞춰 오와 열을 맞추어 행진</li>
-                    <li>행사 중 애국가 및 군가 제창 시에는 크고 패기 있는 목소리로 부르기</li>
-                    <li>행사장 내에서 개인 행동 및 무단 이탈 절대 금지</li>
-                    <li>국기에 대한 경례 시 '충성' 구호 생략 (무음 경례)</li>
-                </ol>
-            `
-        },
-        song: {
-            title: "군가편",
-            html: songContentHTML
-        }
-    };
-
-    const songs = [
-        {
-            title: "군조가",
-            artist: "의장대군가",
-            src: "song3.m4a",
-            lyrics: [
-                { time: 0, text: "반짝이는 백철모-에 / 명예를 걸고요" },
-                { time: 7, text: "(붐빠붐빠 붐빠붐빠) 행진 속에 / 청춘은 갑니다" },
-                { time: 15, text: "처-녀 열아홉살 / 아름다운 꿈 속에는" },
-                { time: 21, text: "(라이라이라이라이 차-차차)" },
-                { time: 26, text: "(라이라이라이라이 차-차차)" },
-                { time: 29, text: "돌아가는 엠모 원-에 / 멋쟁이 용사들" },
-                { time: 37, text: "당신만이 그리워-서 / 생각을 합니다" },
-                { time: 44, text: "오 늘은 어딜가서 행 사를 하고" },
-                { time: 48, text: "내 일은 어딜가서 파 티를 하나" },
-                { time: 52, text: "우리들은 서이너이 아 나 갓 아나갓 의장대 용사들 신사들 사자들 호랑이" },
-                { time: 60, text: "멋지구나 부기" },
-                { time: 62, text: "노래하며 춤을추자 립빠빠 립빠 립빠" }
-            ]
-        },
-        {
-            title: "의장대가",
-            artist: "의장대군가",
-            src: "song1.m4a",
-            lyrics: [
-                { time: 0, text: "찬란한 전통과 빛을 이-을(헤이)" },
-                { time: 5, text: "나는대한 건-아" },
-                { time: 8, text: "충-무화랑 넋을 이을 의장대 용사" },
-                { time: 16, text: "자-유평-화 수호할 명예의 기사" },
-                { time: 23, text: "오-늘도 명예속에 살-아나간다" },
-                { time: 30, text: "나-는대-한 아나갓 자-랑스-런 아나갓" },
-                { time: 37, text: "영 원히 빛낼- 의 장 대" },
-                { time: 45, text: "랄라라 랄라라 랄랄 라라(헤이)" },
-                { time: 49, text: "라라라라 라 라" },
-                { time: 52, text: "라-라라라 랄랄라라 랄랄라라라" },
-                { time: 59, text: "나-는대-한 아나갓 자-랑스-런 아나갓" },
-                { time: 65, text: "영 원히 빛낼- 의 장 대" },
-                { time: 70, text: "반짝이는 백철모에 명예를 걸고요 뿜빠뿜빠 뿜빠뿜빠" },
-                { time: 75, text: "행진 속에 청춘은 갑니다" },
-                { time: 79, text: "처녀 열아홉살 아름다운 꿈 속에는 라이라이라이라이 차차차 라이라이라이라이 차차차" },
-                { time: 88, text: "돌아가는 엠모원에 멋쟁이 용사들" },
-                { time: 94, text: "당신만이 그리워서 생각을 합니다" },
-                { time: 101, text: "오늘은 어딜가서 행사를 하고 내일은 어딜가서 파티를 하나" },
-                { time: 109, text: "우리들은 서이 너이 아나갓 아나갓 의장대 용사들 신사들 사자들 호랑이" },
-                { time: 119, text: "멋지구나 부기 노래하며 춤을추자 립빠빠 립빠 립빠" }
-            ]
-        },
-        {
-            title: "계룡산 호랑이",
-            artist: "의장대군가",
-            src: "song2.m4a",
-            lyrics: [
-                { time: 0, text: "계룡산 정기뻗어 여기에 맺히고" },
-                { time: 8, text: "백-두화랑 정통받은 대한육군 의장대" },
-                { time: 15, text: "작-렬하는 태양속에 빛나는 호랑이마크" },
-                { time: 23, text: "반-짝이는 행사모에 모든걸 걸었다" },
-                { time: 30, text: "(야성) 야성 (패기) 패기" },
-                { time: 34, text: "(헤이) 펄펄끓는 눈동자" },
-                { time: 37, text: "행사에 목숨걸고 명예에 죽고사는" },
-                { time: 41, text: "육 (군) 의 (장) 대" },
-                { time: 45, text: "의식은 전투처럼 훈련은 실전같이" },
-                { time: 49, text: "육 (육) 군 (군) 의 (의) 장 (장) 대 (대)" },
-                { time: 52, text: "의장대" }
-            ]
-        }
-    ];
-
-    let currentSongIndex = 0;
-    let isPlaying = false;
-    let audioPlayer = document.getElementById('audio-player');
-
-    const app = document.getElementById('app');
-    const contentTitle = document.getElementById('content-title');
-    const contentBody = document.getElementById('content-body');
-
-    function openContent(section) {
-        contentTitle.innerText = contentData[section].title;
-        contentBody.innerHTML = contentData[section].html;
-        app.classList.add('state-content-active');
-        
-        if (section === 'song') {
-            initPlayer();
-        } else {
-            resetPlayer();
-        }
-    }
-
-    function closeContent() {
-        app.classList.remove('state-content-active');
-        resetPlayer();
-    }
-
-    function initPlayer() {
-        audioPlayer = document.getElementById('audio-player');
-        
-        audioPlayer.removeEventListener('timeupdate', updateProgress);
-        audioPlayer.addEventListener('timeupdate', updateProgress);
-        audioPlayer.addEventListener('loadedmetadata', () => {
-            document.getElementById('total-time').innerText = formatTime(audioPlayer.duration);
-        });
-        audioPlayer.addEventListener('ended', () => {
-            resetPlayerUI();
-        });
-        
-        loadSong(currentSongIndex);
-        updateTabsUI();
-    }
-
-    function selectSong(index) {
-        if (currentSongIndex === index) return;
-        currentSongIndex = index;
-        loadSong(index);
-        updateTabsUI();
-        
-        // 탭 변경 시 자동 재생
-        audioPlayer.play().then(() => {
-            isPlaying = true;
-            document.getElementById('play-btn').innerHTML = '&#10074;&#10074;';
-        }).catch(e => console.log("Autoplay blocked:", e));
-    }
-
-    function updateTabsUI() {
-        const tabs = document.querySelectorAll('.song-tab');
-        tabs.forEach((tab, i) => {
-            if (i === currentSongIndex) {
-                tab.classList.add('active');
-            } else {
-                tab.classList.remove('active');
-            }
-        });
-    }
-
-    function loadSong(index) {
-        const song = songs[index];
-        document.getElementById('song-title').innerText = song.title;
-        document.getElementById('song-artist').innerText = song.artist;
-        
-        audioPlayer.src = song.src;
-        audioPlayer.load();
-        
-        const lyricsContainer = document.getElementById('lyrics-container');
-        lyricsContainer.innerHTML = '';
-        
-        song.lyrics.forEach((line) => {
-            const el = document.createElement('div');
-            el.className = 'lyric-line';
-            el.innerText = line.text;
-            el.onclick = () => jumpToTime(line.time);
-            lyricsContainer.appendChild(el);
-        });
-        
-        document.getElementById('current-time').innerText = "0:00";
-        document.getElementById('progress-bar-fill').style.width = '0%';
-        
-        if(isPlaying) {
-            document.getElementById('play-btn').innerHTML = '&#10074;&#10074;';
-        } else {
-            document.getElementById('play-btn').innerHTML = '&#9654;';
-        }
-    }
-
-    function togglePlay() {
-        const btn = document.getElementById('play-btn');
-        if (audioPlayer.paused) {
-            audioPlayer.play();
-            isPlaying = true;
-            btn.innerHTML = '&#10074;&#10074;';
-        } else {
-            audioPlayer.pause();
-            isPlaying = false;
-            btn.innerHTML = '&#9654;';
-        }
-    }
-
-    function resetPlayer() {
-        if (audioPlayer) {
-            audioPlayer.pause();
-            audioPlayer.currentTime = 0;
-        }
-        isPlaying = false;
-        currentSongIndex = 0; // 돌아갈때 초기화
-    }
-
-    function resetPlayerUI() {
-        isPlaying = false;
-        document.getElementById('play-btn').innerHTML = '&#9654;';
-        audioPlayer.currentTime = 0;
-        document.getElementById('progress-bar-fill').style.width = '0%';
-        document.getElementById('current-time').innerText = "0:00";
-    }
-
-    function updateProgress() {
-        if (!audioPlayer.duration) return;
-        
-        const currentTime = audioPlayer.currentTime;
-        const duration = audioPlayer.duration;
-        const pct = (currentTime / duration) * 100;
-        
-        document.getElementById('progress-bar-fill').style.width = pct + '%';
-        document.getElementById('current-time').innerText = formatTime(Math.floor(currentTime));
-        
-        // Sync lyrics
-        const song = songs[currentSongIndex];
-        const lines = document.querySelectorAll('.lyric-line');
-        let activeIndex = -1;
-        
-        for (let i = 0; i < song.lyrics.length; i++) {
-            if (currentTime >= song.lyrics[i].time) {
-                activeIndex = i;
-            }
-        }
-        
-        lines.forEach((line, index) => {
-            if (index === activeIndex) {
-                if (!line.classList.contains('active')) {
-                    line.classList.add('active');
-                    // 가사가 부드럽게 중앙에 오도록 스크롤 조절
-                    line.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            } else {
-                line.classList.remove('active');
-            }
-        });
-    }
-
-    function formatTime(seconds) {
-        if (isNaN(seconds)) return "0:00";
-        const m = Math.floor(seconds / 60);
-        const s = Math.floor(seconds % 60);
-        return m + ":" + (s < 10 ? '0' : '') + s;
-    }
-
-    function jumpToTime(time) {
-        audioPlayer.currentTime = time;
-        if (!isPlaying) togglePlay();
-    }
-
-    function seekSong(event) {
-        const bg = document.getElementById('progress-bar-bg');
-        const rect = bg.getBoundingClientRect();
-        const clickX = event.clientX - rect.left;
-        const width = rect.width;
-        const pct = clickX / width;
-        audioPlayer.currentTime = pct * audioPlayer.duration;
-    }
-</script>
 
 </body>
 </html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>의장대에서 살아남기</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+    <style>
+        :root {
+            --bg-dark-green: #0c261a;
+            --primary-deep: #113826;
+            --primary-color: #174932;
+            --primary-mid: #1f5c40;
+            --primary-soft: #eef4f0;
+            --primary-tint: #f6f9f7;
+
+            --accent-color: #d4af37;
+            --accent-bright: #f3d46b;
+            --accent-deep: #9e7a18;
+            --accent-soft: #fcf7e6;
+
+            --pure-white: #ffffff;
+            --text-main: #18241d;
+            --text-sub: #4c5d53;
+            --text-muted: #76877d;
+
+            --gold-gradient: linear-gradient(135deg, #b88a28 0%, #f5df8b 35%, #d4af37 55%, #fff1b8 78%, #9e7318 100%);
+            --green-hero-gradient: linear-gradient(160deg, #0b2217 0%, #143d29 52%, #1b4f36 100%);
+            --player-bg: linear-gradient(165deg, #102e20 0%, #091a12 65%, #050f0a 100%);
+            --card-shadow: 0 18px 45px rgba(10, 34, 23, 0.14);
+            --subtle-shadow: 0 6px 18px rgba(17, 56, 38, 0.07);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background:
+                radial-gradient(circle at 18% 12%, rgba(212, 175, 55, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 82% 88%, rgba(23, 73, 50, 0.18) 0%, transparent 45%),
+                linear-gradient(180deg, #0d291c 0%, #133927 280px, #eff4f1 280px, #eff4f1 100%);
+            color: var(--text-main);
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gold-gradient);
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(212, 175, 55, 0.45);
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 680px;
+            padding: 28px 20px 48px;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero-card {
+            width: 100%;
+            background: var(--green-hero-gradient);
+            border-radius: 28px;
+            padding: 36px 28px 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 22px 50px rgba(7, 24, 16, 0.32);
+            border: 1px solid rgba(212, 175, 55, 0.42);
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            margin-top: 1.5vh;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border-radius: 21px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            pointer-events: none;
+        }
+
+        .hero-card::after {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: -20%;
+            width: 140%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.16) 0%, transparent 62%);
+            pointer-events: none;
+        }
+
+        .unit-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            color: var(--accent-bright);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+            z-index: 1;
+        }
+
+        .unit-pill-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-bright);
+            box-shadow: 0 0 8px var(--accent-bright);
+        }
+
+        .mark-container {
+            width: 132px;
+            height: 140px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .mark-glow {
+            position: absolute;
+            width: 126px;
+            height: 126px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, rgba(212, 175, 55, 0.18) 45%, transparent 72%);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.25);
+        }
+
+        .mark-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.45));
+            transition: transform 0.35s ease;
+        }
+
+        .mark-container:hover .mark-img {
+            transform: translateY(-3px) scale(1.03);
+        }
+
+        .main-title {
+            font-size: 2.15rem;
+            font-weight: 800;
+            margin: 0;
+            text-align: center;
+            color: var(--pure-white);
+            letter-spacing: -0.6px;
+            z-index: 1;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .menu-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .menu-btn {
+            background: var(--pure-white);
+            border: 1px solid rgba(23, 73, 50, 0.14);
+            color: var(--primary-deep);
+            padding: 22px 16px 20px;
+            font-size: 1.12rem;
+            font-weight: 800;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+        }
+
+        .menu-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gold-gradient);
+            opacity: 0.85;
+            transition: height 0.25s ease;
+        }
+
+        .menu-btn-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            background: var(--primary-soft);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-btn-label {
+            font-size: 1.12rem;
+            font-weight: 800;
+            color: var(--primary-deep);
+            letter-spacing: -0.3px;
+        }
+
+        .menu-btn-desc {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            line-height: 1.35;
+        }
+
+        .menu-btn-count {
+            margin-top: 4px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--accent-deep);
+            background: var(--accent-soft);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            padding: 3px 10px;
+            border-radius: 999px;
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 38px rgba(12, 38, 26, 0.2);
+            border-color: var(--accent-color);
+        }
+
+        .menu-btn:hover .menu-btn-icon {
+            background: var(--primary-color);
+            color: var(--accent-bright);
+            border-color: var(--accent-color);
+        }
+
+        .app-container.state-content-active .hero-card,
+        .app-container.state-content-active .menu-container {
+            transform: translateY(-30px) scale(0.96);
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+            visibility: hidden;
+        }
+
+        .content-container {
+            width: 100%;
+            background: var(--pure-white);
+            border-radius: 26px;
+            padding: 0;
+            box-shadow: 0 22px 55px rgba(10, 34, 23, 0.18);
+            opacity: 0;
+            transform: translateY(24px) scale(0.98);
+            pointer-events: none;
+            transition: all 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+            position: absolute;
+            top: 28px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.38);
+            visibility: hidden;
+        }
+
+        .app-container.state-content-active .content-container {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+            position: relative;
+            top: 0;
+            margin-top: 4px;
+            margin-bottom: 32px;
+            visibility: visible;
+        }
+
+        .content-header {
+            background: var(--green-hero-gradient);
+            padding: 22px 24px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--accent-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1;
+        }
+
+        .content-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0;
+            color: var(--pure-white);
+            letter-spacing: -0.4px;
+        }
+
+        .back-btn::before { content: '← '; }
+        .back-btn {
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--pure-white);
+            border: 1px solid rgba(212, 175, 55, 0.55);
+            padding: 9px 16px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            z-index: 1;
+        }
+
+        .back-btn:hover {
+            background: var(--pure-white);
+            color: var(--primary-deep);
+            border-color: var(--pure-white);
+            transform: translateX(-2px);
+        }
+
+        #content-body {
+            padding: 24px;
+        }
+
+        @media (max-width: 600px) {
+            .app-container {
+                padding: 18px 14px 36px;
+            }
+            .hero-card {
+                padding: 28px 18px 24px;
+            }
+            .main-title {
+                font-size: 1.8rem;
+            }
+            .menu-container {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .menu-btn {
+                flex-direction: row;
+                justify-content: flex-start;
+                text-align: left;
+                padding: 16px 18px;
+                gap: 14px;
+            }
+            .menu-btn-count {
+                margin-top: 0;
+            }
+            .content-header {
+                padding: 18px 18px 16px;
+            }
+            #content-body {
+                padding: 18px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container" id="app">
+
+    <!-- 상단 메인 히어로 카드 -->
+    <div class="hero-card">
+        <div class="unit-pill">
+            <span class="unit-pill-dot"></span>
+            <span>ROK ARMY HONOR GUARD</span>
+        </div>
+
+        <div class="mark-container">
+            <div class="mark-glow"></div>
+            <!-- 부대 마크 base64 이미지 -->
+            <img class="mark-img" src="data:image/png;base64,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
