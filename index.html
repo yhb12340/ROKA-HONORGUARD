@@ -2,28 +2,46 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>의장대에서 살아남기</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>의장대에서 살아남기 — 육군 의장대 신병 가이드북</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
     <style>
         :root {
-            --bg-color: #f2f5f3; /* 옅은 웜그레이 톤으로 정돈 */
-            --text-color: #2b332c; 
-            --primary-color: #1b4b36; /* 딥그린 (육군 의장대 메인 컬러) */
-            --accent-color: #d4af37; /* 메탈릭 골드 */
-            --btn-bg: #ffffff;
-            --btn-hover: #f0f4f1;
-            /* 플레이어 배경: 진초록과 검은색 그라데이션 */
-            --player-bg: linear-gradient(145deg, #183325, #0d1a13);
-            --player-text: #ffffff;
-            --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            /* 육군 의장대 시그니처 컬러 팔레트: 딥그린(메인) + 골드 & 화이트(포인트) */
+            --bg-dark-green: #0c261a;
+            --primary-deep: #113826;
+            --primary-color: #174932;
+            --primary-mid: #1f5c40;
+            --primary-soft: #eef4f0;
+            --primary-tint: #f6f9f7;
+
+            --accent-color: #d4af37;
+            --accent-bright: #f3d46b;
+            --accent-deep: #9e7a18;
+            --accent-soft: #fcf7e6;
+
+            --pure-white: #ffffff;
+            --text-main: #18241d;
+            --text-sub: #4c5d53;
+            --text-muted: #76877d;
+
+            --gold-gradient: linear-gradient(135deg, #b88a28 0%, #f5df8b 35%, #d4af37 55%, #fff1b8 78%, #9e7318 100%);
+            --green-hero-gradient: linear-gradient(160deg, #0b2217 0%, #143d29 52%, #1b4f36 100%);
+            --player-bg: linear-gradient(165deg, #102e20 0%, #091a12 65%, #050f0a 100%);
+            --card-shadow: 0 12px 30px rgba(10, 34, 23, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             margin: 0;
             padding: 0;
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background: linear-gradient(180deg, #0d291c 0%, #133927 280px, #eff4f1 280px, #eff4f1 100%);
+            color: var(--text-main);
             overflow-x: hidden;
             display: flex;
             justify-content: center;
@@ -32,67 +50,163 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- 마크 벡터 이미지(SVG) 스타일 --- */
-        .mark-container {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 10px;
-            margin-top: 4vh;
-            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
-        }
-
-        .mark-svg {
-            width: 100%;
-            height: 100%;
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gold-gradient);
+            z-index: 100;
         }
 
         .app-container {
             width: 100%;
-            max-width: 600px;
-            padding: 20px;
+            max-width: 680px;
+            padding: 20px 16px 40px;
             position: relative;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            box-sizing: border-box;
+        }
+
+        /* --- 메인 히어로 영역 --- */
+        .hero-card {
+            width: 100%;
+            background: var(--green-hero-gradient);
+            border-radius: 24px;
+            padding: 32px 24px 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 16px 36px rgba(7, 24, 16, 0.25);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            transition: all 0.4s ease;
+            margin-top: 10px;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            pointer-events: none;
+        }
+
+        .unit-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            color: var(--accent-bright);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            margin-bottom: 16px;
+            z-index: 1;
+        }
+
+        .unit-pill-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-bright);
+            box-shadow: 0 0 8px var(--accent-bright);
+        }
+
+        .mark-container {
+            width: 110px;
+            height: 116px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mark-glow {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
+        }
+
+        .mark-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
         }
 
         .main-title {
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             font-weight: 800;
-            margin-top: 0; 
-            margin-bottom: 30px;
+            margin: 0 0 20px 0;
             text-align: center;
-            color: var(--primary-color);
-            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-            transform-origin: top center;
+            color: var(--pure-white);
             letter-spacing: -0.5px;
-            text-shadow: 1px 1px 0px rgba(255,255,255,0.8);
+            z-index: 1;
         }
 
+        .gold-divider {
+            width: 60px;
+            height: 3px;
+            border-radius: 999px;
+            background: var(--gold-gradient);
+            margin-bottom: 20px;
+            z-index: 1;
+        }
+
+        .motto-strip {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--pure-white);
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        /* --- 메인 메뉴 카드 버튼 --- */
         .menu-container {
             display: flex;
-            flex-direction: row;
-            gap: 15px;
+            flex-direction: column;
+            gap: 12px;
             width: 100%;
-            justify-content: center;
-            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            margin-top: 16px;
+            transition: all 0.4s ease;
         }
 
         .menu-btn {
-            background-color: var(--btn-bg);
-            border: 1px solid rgba(27, 75, 54, 0.1);
-            color: var(--primary-color);
-            padding: 16px 20px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            border-radius: 16px;
+            background: var(--pure-white);
+            border: 1px solid rgba(23, 73, 50, 0.1);
+            color: var(--primary-deep);
+            padding: 16px;
+            border-radius: 18px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-            flex: 1;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: center;
+            text-align: left;
+            gap: 14px;
             position: relative;
             overflow: hidden;
         }
@@ -100,109 +214,367 @@
         .menu-btn::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
             background: var(--gold-gradient);
-            opacity: 0;
-            transition: opacity 0.3s ease;
         }
 
-        .menu-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        .menu-btn-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--primary-soft);
             color: var(--primary-color);
-            border-color: transparent;
-        }
-        
-        .menu-btn:hover::before {
-            opacity: 1;
-        }
-
-        /* 상세 화면 진입 시 타이틀/마크 애니메이션 */
-        .app-container.state-content-active .mark-container {
-            transform: translateY(-40px) scale(0.6);
-            opacity: 0;
-            pointer-events: none;
-            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
-        .app-container.state-content-active .main-title {
-            transform: translateY(-60px) scale(0.85);
-            opacity: 0;
-            pointer-events: none;
-            position: absolute;
+        .menu-btn-text-wrap {
+            flex: 1;
         }
 
+        .menu-btn-label {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--primary-deep);
+            margin-bottom: 2px;
+        }
+
+        .menu-btn-desc {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .menu-btn-count {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent-deep);
+            background: var(--accent-soft);
+            padding: 4px 10px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .menu-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* --- 상세 화면 진입 시 전환 --- */
+        .app-container.state-content-active .hero-card,
         .app-container.state-content-active .menu-container {
-            transform: translateY(40px);
-            opacity: 0;
-            pointer-events: none;
-            position: absolute;
+            display: none;
         }
 
+        /* --- 컨텐츠 컨테이너 --- */
         .content-container {
             width: 100%;
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 30px 25px;
-            box-shadow: 0 10px 40px rgba(27, 75, 54, 0.08);
-            opacity: 0;
-            transform: translateY(20px) scale(0.98);
-            pointer-events: none;
-            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-            position: absolute;
-            top: 80px;
-            box-sizing: border-box;
-            border-top: 4px solid var(--primary-color);
+            background: var(--pure-white);
+            border-radius: 20px;
+            padding: 0;
+            box-shadow: 0 16px 36px rgba(10, 34, 23, 0.12);
+            display: none;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            animation: slideUp 0.3s ease forwards;
         }
 
         .app-container.state-content-active .content-container {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            pointer-events: auto;
-            position: relative;
-            top: 0;
-            margin-top: 20px;
-            margin-bottom: 40px;
+            display: block;
         }
 
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 상세 페이지 헤더 */
         .content-header {
+            background: var(--green-hero-gradient);
+            padding: 16px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
-            border-bottom: 1px solid rgba(27, 75, 54, 0.1);
-            padding-bottom: 15px;
+            border-bottom: 2px solid var(--accent-color);
+            position: relative;
+        }
+
+        .header-watermark {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .content-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1;
+        }
+
+        .header-mini-mark {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .content-eyebrow {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--accent-bright);
+            letter-spacing: 1px;
+            display: block;
         }
 
         .content-title {
-            font-size: 1.6rem;
+            font-size: 1.25rem;
             font-weight: 800;
             margin: 0;
-            color: var(--primary-color);
+            color: var(--pure-white);
         }
 
         .back-btn {
-            background-color: transparent;
-            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--pure-white);
             border: none;
             padding: 8px 12px;
-            font-size: 1rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .quick-nav-bar {
+            display: flex;
+            background: var(--primary-soft);
+            padding: 8px 12px;
+            overflow-x: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .quick-nav-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quick-nav-pill {
+            flex: 1;
+            min-width: 90px;
+            padding: 10px 8px;
+            border: none;
+            background: transparent;
+            color: var(--text-sub);
+            font-size: 0.85rem;
             font-weight: 700;
             cursor: pointer;
-            transition: opacity 0.2s;
+            text-align: center;
+            border-radius: 8px;
         }
 
-        .back-btn:hover {
-            opacity: 0.7;
+        .quick-nav-pill.active {
+            background: var(--pure-white);
+            color: var(--primary-deep);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
 
-        /* --- Apple Music Style 개선 (색상 테마 반영) --- */
+        #content-body {
+            padding: 20px 16px;
+        }
+
+        .section-content {
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* --- 검색 및 필터 (생활편) --- */
+        .filter-toolbar {
+            background: var(--primary-tint);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+
+        .search-input-wrap {
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 12px 10px 34px;
+            border-radius: 8px;
+            border: 1px solid rgba(23, 73, 50, 0.2);
+            font-size: 0.9rem;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .category-chips {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 6px;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .category-chips::-webkit-scrollbar {
+            display: none;
+        }
+
+        .cat-chip {
+            border: 1px solid rgba(23, 73, 50, 0.15);
+            background: var(--pure-white);
+            color: var(--text-sub);
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .cat-chip.active {
+            background: var(--primary-color);
+            color: var(--pure-white);
+            border-color: var(--primary-color);
+        }
+
+        /* --- 공지 박스 --- */
+        .notice-box {
+            background: linear-gradient(135deg, #133c28 0%, #1b5238 100%);
+            border-left: 4px solid var(--accent-color);
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            border-radius: 10px;
+            color: var(--pure-white);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notice-box-mark {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .notice-box-label {
+            font-size: 0.7rem;
+            color: var(--accent-bright);
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+
+        .notice-box-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        /* --- 리스트 스타일 --- */
+        ol.custom-list {
+            list-style: none;
+            counter-reset: item;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        ol.custom-list > li {
+            counter-increment: item;
+            padding: 14px 14px 14px 46px;
+            position: relative;
+            line-height: 1.4;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            background: var(--pure-white);
+            border: 1px solid rgba(23, 73, 50, 0.1);
+            border-radius: 12px;
+        }
+
+        ol.custom-list > li::before {
+            content: counter(item);
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            width: 24px;
+            height: 24px;
+            background: var(--primary-color);
+            color: var(--accent-bright);
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .highlight {
+            color: #7a5600;
+            background: rgba(212, 175, 55, 0.15);
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 800;
+        }
+
+        ol.custom-list > li.is-highlight-row {
+            background: #fffdf6;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+        }
+
+        ol.custom-list > li.is-highlight-row::before {
+            background: var(--gold-gradient);
+            color: var(--bg-dark-green);
+        }
+
+        .empty-filter-msg {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* --- 군가편 플레이어 --- */
         .song-selector {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            background: rgba(27, 75, 54, 0.05);
+            gap: 8px;
+            margin-bottom: 16px;
+            background: var(--primary-soft);
             padding: 6px;
             border-radius: 12px;
             overflow-x: auto;
@@ -217,108 +589,101 @@
         .song-tab {
             flex: 1;
             min-width: 80px;
-            padding: 10px 5px;
+            padding: 8px;
             border: none;
             background: transparent;
             border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #7b8a81;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-sub);
             cursor: pointer;
-            transition: all 0.3s ease;
             white-space: nowrap;
         }
 
         .song-tab.active {
             background: var(--primary-color);
-            color: #ffffff;
-            box-shadow: 0 4px 10px rgba(27, 75, 54, 0.2);
+            color: var(--pure-white);
         }
 
         .music-player-container {
             background: var(--player-bg);
-            border-radius: 24px;
-            padding: 30px 20px;
-            color: var(--player-text);
-            box-shadow: 0 20px 40px rgba(13, 26, 19, 0.3);
-            position: relative;
-            overflow: hidden;
+            border-radius: 16px;
+            padding: 24px 16px;
+            color: var(--pure-white);
             display: flex;
             flex-direction: column;
             align-items: center;
-            border: 1px solid rgba(212, 175, 55, 0.2); /* 은은한 골드 테두리 */
+            position: relative;
         }
 
-        /* 플레이어 배경 골드 장식 */
-        .music-player-container::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 60%);
-            pointer-events: none;
+        .player-emblem-badge {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 8px;
         }
 
-        .song-info {
-            text-align: center;
-            margin-bottom: 25px;
+        .player-emblem-badge img {
             width: 100%;
-            z-index: 1;
+            height: 100%;
+            object-fit: contain;
         }
 
         .song-title {
-            font-size: 1.7rem;
+            font-size: 1.4rem;
             font-weight: 800;
-            margin: 0;
-            letter-spacing: -0.5px;
-            color: var(--accent-color); /* 제목은 골드 */
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            margin: 0 0 4px 0;
+            color: var(--accent-bright);
+            text-align: center;
         }
-        
+
         .song-artist {
-            font-size: 1rem;
-            color: #a0b3a6;
-            margin-top: 6px;
-            font-weight: 500;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .lyrics-helper-tip {
+            font-size: 0.7rem;
+            color: var(--accent-bright);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 999px;
+            margin-bottom: 12px;
         }
 
         .lyrics-container {
             width: 100%;
-            height: 280px;
+            height: 200px;
             overflow-y: auto;
             text-align: center;
-            margin: 10px 0 25px 0;
-            padding: 20px 0;
-            scroll-behavior: smooth;
+            margin-bottom: 20px;
+            padding: 10px 0;
             mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
             -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
-            z-index: 1;
+            scroll-behavior: smooth;
         }
-
+        
         .lyrics-container::-webkit-scrollbar {
             display: none;
         }
-        
-        .lyrics-container {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
 
         .lyric-line {
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             font-weight: 600;
-            margin: 20px 0;
-            color: #6a8071;
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            margin: 14px 0;
+            color: rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease;
             cursor: pointer;
-            line-height: 1.5;
-            padding: 0 10px;
+            padding: 4px;
         }
 
         .lyric-line.active {
-            font-size: 1.45rem;
-            color: #ffffff;
-            transform: scale(1.02);
-            text-shadow: 0 2px 10px rgba(255,255,255,0.3);
+            font-size: 1.15rem;
+            color: var(--pure-white);
+            font-weight: 800;
+            color: var(--accent-bright);
+            transform: scale(1.05);
         }
 
         .player-controls {
@@ -326,290 +691,221 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            z-index: 1;
         }
 
         .progress-container {
             width: 100%;
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #a0b3a6;
-            margin-bottom: 20px;
+            gap: 10px;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 16px;
         }
 
         .progress-bar-bg {
             flex: 1;
             height: 6px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
             position: relative;
             cursor: pointer;
         }
 
         .progress-bar-fill {
             position: absolute;
-            top: 0;
             left: 0;
+            top: 0;
             height: 100%;
             background: var(--gold-gradient);
-            border-radius: 4px;
+            border-radius: 999px;
             width: 0%;
-            transition: width 0.1s linear;
+            pointer-events: none;
         }
 
         .progress-bar-fill::after {
             content: '';
             position: absolute;
-            right: -4px;
+            right: -6px;
             top: 50%;
             transform: translateY(-50%);
-            width: 10px;
-            height: 10px;
-            background: #ffffff;
+            width: 12px;
+            height: 12px;
+            background: var(--pure-white);
             border-radius: 50%;
-            box-shadow: 0 0 6px rgba(212, 175, 55, 0.8);
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .progress-bar-bg:hover .progress-bar-fill::after {
-            opacity: 1;
         }
 
         .play-btn {
-            background: #ffffff;
+            background: var(--gold-gradient);
             border: none;
-            color: var(--primary-color);
-            width: 64px;
-            height: 64px;
+            color: var(--bg-dark-green);
+            width: 54px;
+            height: 54px;
             border-radius: 50%;
-            font-size: 1.8rem;
+            font-size: 1.4rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: transform 0.2s ease, background-color 0.2s;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
-
+        
         .play-btn:active {
-            transform: scale(0.92);
-            background-color: #f0f0f5;
+            transform: scale(0.95);
         }
 
-        /* --- 리스트 및 기타 컨텐츠 스타일 --- */
-        ol.custom-list {
-            list-style: none;
-            counter-reset: item;
-            padding: 0;
-            margin: 0;
-        }
-
-        ol.custom-list > li {
-            counter-increment: item;
-            margin-bottom: 18px;
-            padding-left: 42px;
-            position: relative;
-            line-height: 1.6;
-            font-size: 1.05rem;
-            color: #333333;
-        }
-
-        ol.custom-list > li::before {
-            content: counter(item);
-            position: absolute;
-            left: 0;
-            top: 2px;
-            width: 26px;
-            height: 26px;
-            background-color: var(--primary-color);
-            color: #ffffff;
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.9rem;
-            font-weight: 700;
-            box-shadow: 0 2px 5px rgba(27, 75, 54, 0.3);
-        }
-
-        .notice-box {
-            background-color: #fdfaf0;
-            border-left: 4px solid var(--accent-color);
-            padding: 16px 20px;
-            margin-bottom: 25px;
-            border-radius: 0 12px 12px 0;
-            font-weight: 700;
-            color: var(--primary-color);
-            line-height: 1.5;
-            font-size: 0.95rem;
-            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.1);
-        }
-
-        .highlight {
-            color: var(--accent-color);
-            font-weight: 800;
-            text-shadow: 0px 0px 1px rgba(212, 175, 55, 0.3);
-        }
-
-        @media (max-width: 600px) {
-            .menu-container { flex-direction: column; }
-            .menu-btn { width: 100%; }
-        }
     </style>
 </head>
 <body>
 
 <div class="app-container" id="app">
-    
-    <!-- 부대 마크 벡터 이미지 (호랑이 방패 문양) -->
-    <div class="mark-container">
-        <svg class="mark-svg" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#bf953f" />
-                    <stop offset="25%" stop-color="#fcf6ba" />
-                    <stop offset="50%" stop-color="#b38728" />
-                    <stop offset="75%" stop-color="#fbf5b7" />
-                    <stop offset="100%" stop-color="#aa771c" />
-                </linearGradient>
-                <linearGradient id="shieldBg" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stop-color="#2a5a41" />
-                    <stop offset="100%" stop-color="#143323" />
-                </linearGradient>
-                <filter id="shadow">
-                    <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
-                </filter>
-            </defs>
-            <!-- 상단 리본 -->
-            <path d="M 10,20 Q 50,30 90,20 L 85,35 Q 50,45 15,35 Z" fill="url(#goldGrad)" filter="url(#shadow)"/>
-            <text x="50" y="34" font-size="12" font-weight="900" fill="#1b4b36" text-anchor="middle" style="letter-spacing: 2px;">대한민국</text>
-            
-            <!-- 방패 테두리 -->
-            <path d="M 20,40 Q 50,50 80,40 Q 90,70 85,90 Q 50,120 15,90 Q 10,70 20,40 Z" fill="url(#goldGrad)" filter="url(#shadow)"/>
-            <!-- 방패 배경 -->
-            <path d="M 23,43 Q 50,52 77,43 Q 86,70 82,88 Q 50,115 18,88 Q 14,70 23,43 Z" fill="url(#shieldBg)"/>
-            
-            <!-- 호랑이 형상 (단순화된 벡터) -->
-            <path d="M 35,55 L 45,65 L 55,65 L 65,55 L 60,75 L 55,85 L 45,85 L 40,75 Z" fill="url(#goldGrad)"/>
-            <!-- 눈 -->
-            <circle cx="43" cy="62" r="2" fill="#1b4b36"/>
-            <circle cx="57" cy="62" r="2" fill="#1b4b36"/>
-            <!-- 코/입술 무늬 -->
-            <path d="M 50,68 L 47,75 L 53,75 Z" fill="#1b4b36"/>
-            <path d="M 45,80 Q 50,85 55,80" fill="none" stroke="#1b4b36" stroke-width="2"/>
-            
-            <!-- 하단 텍스트 -->
-            <text x="50" y="100" font-size="11" font-weight="900" fill="url(#goldGrad)" text-anchor="middle">의 장 대</text>
-            <text x="50" y="112" font-size="10" font-weight="900" fill="url(#goldGrad)" text-anchor="middle">육  군</text>
-        </svg>
+
+    <!-- 메인 히어로 -->
+    <div class="hero-card">
+        <div class="unit-pill">
+            <span class="unit-pill-dot"></span>
+            <span>ROK ARMY HONOR GUARD</span>
+        </div>
+
+        <div class="mark-container">
+            <div class="mark-glow"></div>
+            <img class="mark-img" src="Code_Generated_Image.png" alt="대한민국 육군 의장대 마크" onerror="this.src='https://placehold.co/100x100/174932/d4af37?text=MARK'"/>
+        </div>
+
+        <h1 class="main-title">의장대에서 살아남기</h1>
+        <div class="gold-divider"></div>
+
+        <div class="motto-strip">
+            <span>의식은 전투처럼 훈련은 실전같이</span>
+        </div>
     </div>
 
-    <h1 class="main-title">의장대에서 살아남기</h1>
-    
+    <!-- 메뉴 리스트 -->
     <div class="menu-container">
-        <button class="menu-btn" onclick="openContent('life')">생활편</button>
-        <button class="menu-btn" onclick="openContent('training')">행사/훈련편</button>
-        <button class="menu-btn" onclick="openContent('song')">군가편</button>
+        <button class="menu-btn" onclick="openContent('life')">
+            <div class="menu-btn-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            </div>
+            <div class="menu-btn-text-wrap">
+                <div class="menu-btn-label">생활편</div>
+                <div class="menu-btn-desc">관물대·복장·일과·점호</div>
+            </div>
+            <span class="menu-btn-count">31개 수칙</span>
+        </button>
+
+        <button class="menu-btn" onclick="openContent('training')">
+            <div class="menu-btn-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            </div>
+            <div class="menu-btn-text-wrap">
+                <div class="menu-btn-label">행사/훈련편</div>
+                <div class="menu-btn-desc">총기·행사복·군기·행진</div>
+            </div>
+            <span class="menu-btn-count">12개 수칙</span>
+        </button>
+
+        <button class="menu-btn" onclick="openContent('song')">
+            <div class="menu-btn-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+            </div>
+            <div class="menu-btn-text-wrap">
+                <div class="menu-btn-label">군가편</div>
+                <div class="menu-btn-desc">의장대 필수 군가 3곡</div>
+            </div>
+            <span class="menu-btn-count">가사 싱크</span>
+        </button>
     </div>
 
+    <!-- 상세 컨텐츠 컨테이너 -->
     <div class="content-container">
+        <!-- 헤더 -->
         <div class="content-header">
-            <h2 class="content-title" id="content-title"></h2>
+            <img class="header-watermark" src="Code_Generated_Image.png" alt="워터마크" onerror="this.style.display='none'"/>
+            <div class="content-header-left">
+                <img class="header-mini-mark" src="Code_Generated_Image.png" alt="의장대 마크" onerror="this.src='https://placehold.co/32x32/174932/d4af37?text=M'"/>
+                <div>
+                    <span class="content-eyebrow">ROKA HONOR GUARD GUIDE</span>
+                    <h2 class="content-title" id="content-title">메뉴명</h2>
+                </div>
+            </div>
             <button class="back-btn" onclick="closeContent()">돌아가기</button>
         </div>
-        <div id="content-body"></div>
-    </div>
-</div>
 
-<audio id="audio-player"></audio>
-
-<script>
-    const songContentHTML = `
-        <div class="song-selector" id="song-selector">
-            <button class="song-tab active" onclick="selectSong(0)">군조가</button>
-            <button class="song-tab" onclick="selectSong(1)">의장대가</button>
-            <button class="song-tab" onclick="selectSong(2)">계룡산 호랑이</button>
+        <!-- 빠른 네비게이션 -->
+        <div class="quick-nav-bar">
+            <button class="quick-nav-pill" id="nav-pill-life" onclick="openContent('life')">생활편</button>
+            <button class="quick-nav-pill" id="nav-pill-training" onclick="openContent('training')">행사/훈련편</button>
+            <button class="quick-nav-pill" id="nav-pill-song" onclick="openContent('song')">군가편</button>
         </div>
 
-        <div class="music-player-container">
-            <div class="song-info">
-                <h3 class="song-title" id="song-title">군조가</h3>
-                <div class="song-artist" id="song-artist">의장대군가</div>
-            </div>
+        <!-- 컨텐츠 바디 -->
+        <div id="content-body">
             
-            <div class="lyrics-container" id="lyrics-container">
-                <!-- 가사가 여기에 동적으로 추가됩니다 -->
-            </div>
-            
-            <div class="player-controls">
-                <div class="progress-container">
-                    <span id="current-time">0:00</span>
-                    <div class="progress-bar-bg" id="progress-bar-bg" onclick="seekSong(event)">
-                        <div class="progress-bar-fill" id="progress-bar-fill"></div>
+            <!-- 생활편 -->
+            <div id="section-life" class="section-content">
+                <div class="filter-toolbar">
+                    <div class="search-input-wrap">
+                        <span class="search-icon">&#128269;</span>
+                        <input type="text" class="search-input" id="life-search-input" placeholder="수칙 키워드 검색" oninput="filterLifeRules()" />
                     </div>
-                    <span id="total-time">0:00</span>
+                    <div class="category-chips">
+                        <button class="cat-chip active" data-cat="all" onclick="selectLifeCategory('all')">전체</button>
+                        <button class="cat-chip" data-cat="locker" onclick="selectLifeCategory('locker')">관물대·복장</button>
+                        <button class="cat-chip" data-cat="daily" onclick="selectLifeCategory('daily')">일과·예절</button>
+                        <button class="cat-chip" data-cat="dorm" onclick="selectLifeCategory('dorm')">생활관·점호</button>
+                        <button class="cat-chip" data-cat="leave" onclick="selectLifeCategory('leave')">출타·보고</button>
+                    </div>
                 </div>
-                
-                <button class="play-btn" id="play-btn" onclick="togglePlay()">&#9654;</button>
-            </div>
-        </div>
-    `;
-
-    const contentData = {
-        life: {
-            title: "생활편",
-            html: `
-                <ol class="custom-list">
-                    <li>일과시간 중 취식 자제 (음료 및 다과는 점심시간이나 개인정비 시간 활용)</li>
-                    <li>PX, 자판기, 체력단련실은 자유롭게 이용 가능</li>
-                    <li>세탁방은 자유롭게 이용하되, 인원 대비 기기가 부족하므로 세탁 및 건조 완료 시 신속히 비워주기</li>
-                    <li>관물대 모자 정리: 가장 좌측에 비치하며 챙이 입구를 향하도록 정렬 (아래부터: 디모 / 기타 모자 / ROKA모 / 베레모 순)</li>
-                    <li>관물대 대각 정리: 가장 우측에 일자(I) 대각 비치 (아래부터: 훈련용 흰대각 / 행사용 흰대각 / 갈색 대각 순)</li>
-                    <li>관물대 뒤쪽 여유 공간에 수통과 X대각을 단정하게 정리하여 비치</li>
-                    <li>의류는 좌측부터 패딩, 방상외피, 방한복 상의 내피(깔깔이), 플리스, 전투복 순으로 좌수걸이하여 보관</li>
-                    <li>취식물 보관: 음료는 쇼케이스, 기타 식품은 출타 가방에 보관</li>
-                    <li>행사복 관리: 샤워 바구니 걸이를 활용해 행사복 걸이를 만들고, 행사 종료 시 행사복은 피복실에 반납 및 걸이 원위치</li>
-                    <li>침상 위와 개인 자리는 항상 청결하고 단정하게 유지 (사용한 자리 즉시 정돈)</li>
-                    <li>생활관 최종 퇴실 시 소등 및 출입문 닫기 철저</li>
-                    <li>방송 전파사항 수신을 위해 이어폰은 한쪽만 착용하거나 적절한 볼륨 유지</li>
-                    <li>간부님들 마주치면 선두만 경례</li>
-                    <li>식사 등 부대 내 이동 시 분대 건제 유지</li>
-                    <li>식사 및 일과 등 집합 시간 엄수 (집합 3분 전 도착)</li>
-                    <li>식사 전 손 씻기 (식중독 예방) </li>
-                    <li>일과 및 체력단련 시간에 침상에 눕거나 TV 시청 금지</li>
-                    <li>국기 상하기(국기에 대한 경례) 음악 송출 시, 제자리에 멈춰 서기</li>
-                    <li>급식으로 제공된 유제품은 식당에서 취식 권장 (쇼케이스 보관 지양)</li>
-                    <li>라면국물 세면대에 절대 버리지 않기. 변기에 버리기</li>
-                    <li>화장실 쓰레기통에 다른 쓰레기 버리지 않기</li>
-                    <li>가급적 8시 이전까지 샤워 권장 (8시 이후부터 진계함 및 임무분담제)</li>
-                    <li>점호 대기 중 정숙 유지</li>
-                    <li>점호 완료 방송 전까지는 점호 상태 유지</li>
-                    <li>연등 시 종료 시각을 정확히 기재하고, 최종 퇴실자는 소등 및 냉·난방기 전원 차단</li>
-                    <li>싸지방 연등은 중대장님 승인 하에 이용 가능</li>
-                    <li>혼복 착용 지양</li>
-                    <li><span class="highlight">외출 및 외박 신청은 가급적 2주 전, 늦어도 1주 전까지 반드시 완료할 것!</span></li>
-                    <li>출타 복귀 시 시간적 여유를 두고 복귀 (구매한 물품은 편의점 봉투 대신 개인 가방에 넣어 복귀 권장)</li>
-                    <li>외출/외박 일정 변경 시 사전에 행정병에게 통보</li>
-                    <li><span class="highlight">근무 변경 시 반드시 소대장님께 사전 보고 후 조치할 것!</span></li>
+                <ol class="custom-list" id="life-rule-list">
+                    <li data-cat="daily">일과시간 중 취식 자제 (음료 및 다과는 점심시간이나 개인정비 시간 활용)</li>
+                    <li data-cat="daily">PX, 자판기, 체력단련실은 자유롭게 이용 가능</li>
+                    <li data-cat="dorm">세탁방은 자유롭게 이용하되, 인원 대비 기기가 부족하므로 세탁 및 건조 완료 시 신속히 비워주기</li>
+                    <li data-cat="locker">관물대 모자 정리: 가장 좌측에 비치하며 챙이 입구를 향하도록 정렬 (아래부터: 디모 / 기타 모자 / ROKA모 / 베레모 순)</li>
+                    <li data-cat="locker">관물대 대각 정리: 가장 우측에 일자(I) 대각 비치 (아래부터: 훈련용 흰대각 / 행사용 흰대각 / 갈색 대각 순)</li>
+                    <li data-cat="locker">관물대 뒤쪽 여유 공간에 수통과 X대각을 단정하게 정리하여 비치</li>
+                    <li data-cat="locker">의류는 좌측부터 패딩, 방상외피, 방한복 상의 내피(깔깔이), 플리스, 전투복 순으로 좌수걸이하여 보관</li>
+                    <li data-cat="dorm">취식물 보관: 음료는 쇼케이스, 기타 식품은 출타 가방에 보관</li>
+                    <li data-cat="locker">행사복 관리: 샤워 바구니 걸이를 활용해 행사복 걸이를 만들고, 행사 종료 시 행사복은 피복실에 반납 및 걸이 원위치</li>
+                    <li data-cat="dorm">침상 위와 개인 자리는 항상 청결하고 단정하게 유지 (사용한 자리 즉시 정돈)</li>
+                    <li data-cat="dorm">생활관 최종 퇴실 시 소등 및 출입문 닫기 철저</li>
+                    <li data-cat="daily">방송 전파사항 수신을 위해 이어폰은 한쪽만 착용하거나 적절한 볼륨 유지</li>
+                    <li data-cat="daily">간부님들 마주치면 선두만 경례</li>
+                    <li data-cat="daily">식사 등 부대 내 이동 시 분대 건제 유지</li>
+                    <li data-cat="daily">식사 및 일과 등 집합 시간 엄수 (집합 3분 전 도착)</li>
+                    <li data-cat="daily">식사 전 손 씻기 (식중독 예방) </li>
+                    <li data-cat="daily">일과 및 체력단련 시간에 침상에 눕거나 TV 시청 금지</li>
+                    <li data-cat="daily">국기 상하기(국기에 대한 경례) 음악 송출 시, 제자리에 멈춰 서기</li>
+                    <li data-cat="daily">급식으로 제공된 유제품은 식당에서 취식 권장 (쇼케이스 보관 지양)</li>
+                    <li data-cat="dorm">라면국물 세면대에 절대 버리지 않기. 변기에 버리기</li>
+                    <li data-cat="dorm">화장실 쓰레기통에 다른 쓰레기 버리지 않기</li>
+                    <li data-cat="dorm">가급적 8시 이전까지 샤워 권장 (8시 이후부터 진계함 및 임무분담제)</li>
+                    <li data-cat="dorm">점호 대기 중 정숙 유지</li>
+                    <li data-cat="dorm">점호 완료 방송 전까지는 점호 상태 유지</li>
+                    <li data-cat="dorm">연등 시 종료 시각을 정확히 기재하고, 최종 퇴실자는 소등 및 냉·난방기 전원 차단</li>
+                    <li data-cat="dorm">싸지방 연등은 중대장님 승인 하에 이용 가능</li>
+                    <li data-cat="locker">혼복 착용 지양</li>
+                    <li data-cat="leave" class="is-highlight-row"><span class="highlight">외출 및 외박 신청은 가급적 2주 전, 늦어도 1주 전까지 반드시 완료할 것!</span></li>
+                    <li data-cat="leave">출타 복귀 시 시간적 여유를 두고 복귀 (구매한 물품은 편의점 봉투 대신 개인 가방에 넣어 복귀 권장)</li>
+                    <li data-cat="leave">외출/외박 일정 변경 시 사전에 행정병에게 통보</li>
+                    <li data-cat="leave" class="is-highlight-row"><span class="highlight">근무 변경 시 반드시 소대장님께 사전 보고 후 조치할 것!</span></li>
                 </ol>
-            `
-        },
-        training: {
-            title: "행사/훈련편",
-            html: `
+                <div class="empty-filter-msg" id="life-empty-msg">검색 조건에 맞는 수칙이 없습니다.</div>
+            </div>
+
+            <!-- 행사/훈련편 -->
+            <div id="section-training" class="section-content">
                 <div class="notice-box">
-                    대한민국 육군을 대표하는 부대로서, 행사 중에는 항상 품위를 유지할 것!
+                    <img class="notice-box-mark" src="Code_Generated_Image.png" alt="의장대 마크" onerror="this.src='https://placehold.co/32x32/174932/d4af37?text=M'"/>
+                    <div class="notice-box-text">
+                        <div class="notice-box-label">HONOR GUARD PLEDGE</div>
+                        <div>대한민국 육군을 대표하는 부대로서, 행사 중에는 항상 품위를 유지할 것!</div>
+                    </div>
                 </div>
                 <ol class="custom-list">
-                    <li><span class="highlight">총기함 및 대검 시건 철저히 하기</span></li>
-                    <li><span class="highlight">현황판 최신화 철저히 하기</span></li>
+                    <li class="is-highlight-row"><span class="highlight">총기함 및 대검 시건 철저히 하기</span></li>
+                    <li class="is-highlight-row"><span class="highlight">현황판 최신화 철저히 하기</span></li>
                     <li>팔을 풀 때 조교에게 사전 보고 후 전투복을 입거나 벗기</li>
                     <li>복장 및 마스크 매무새 정비가 필요할 때도 조교에게 보고 후, 뒤로 돌아선 상태에서 신속히 정비</li>
-                    <li><span class="highlight">행사복 하의는 반드시 분대장에게 사전 검사 받기</span> (빠를수록 좋으며, 최소 행사 5일 전까지 완료 권장)</li>
+                    <li class="is-highlight-row"><span class="highlight">행사복 하의는 반드시 분대장에게 사전 검사 받기</span> (빠를수록 좋으며, 최소 행사 5일 전까지 완료 권장)</li>
                     <li>행사 이틀 전까지 두발 정리 완료 (이발실 사용 후 뒷정리 철저)</li>
                     <li>행사 당일 차량 이동 시 좌석 등받이에 등 기대지 않기 (땀 등 이물질로 인한 행사복 오염 방지)</li>
                     <li>버스 탑승 시 안전사고 예방을 위해 역착검 상태 유지</li>
@@ -618,19 +914,56 @@
                     <li>행사장 내에서 개인 행동 및 무단 이탈 절대 금지</li>
                     <li>국기에 대한 경례 시 '충성' 구호 생략 (무음 경례)</li>
                 </ol>
-            `
-        },
-        song: {
-            title: "군가편",
-            html: songContentHTML
-        }
+            </div>
+
+            <!-- 군가편 -->
+            <div id="section-song" class="section-content">
+                <div class="song-selector">
+                    <button class="song-tab active" id="tab-song-0" onclick="selectSong(0)">군조가</button>
+                    <button class="song-tab" id="tab-song-1" onclick="selectSong(1)">의장대가</button>
+                    <button class="song-tab" id="tab-song-2" onclick="selectSong(2)">계룡산 호랑이</button>
+                </div>
+                <div class="music-player-container">
+                    <div class="player-emblem-badge">
+                        <img src="Code_Generated_Image.png" alt="마크" onerror="this.src='https://placehold.co/48x48/174932/d4af37?text=M'"/>
+                    </div>
+                    <div>
+                        <h3 class="song-title" id="song-title">군조가</h3>
+                        <div class="song-artist" id="song-artist">의장대군가</div>
+                    </div>
+                    <div class="lyrics-helper-tip">가사를 누르면 해당 구간으로 이동합니다</div>
+                    
+                    <div class="lyrics-container" id="lyrics-container"></div>
+                    
+                    <div class="player-controls">
+                        <div class="progress-container">
+                            <span id="current-time">0:00</span>
+                            <div class="progress-bar-bg" id="progress-bar-bg" onclick="seekSong(event)">
+                                <div class="progress-bar-fill" id="progress-bar-fill"></div>
+                            </div>
+                            <span id="total-time">0:00</span>
+                        </div>
+                        <button class="play-btn" id="play-btn" onclick="togglePlay()">&#9654;</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<audio id="audio-player"></audio>
+
+<script>
+    const sectionTitles = {
+        life: "생활편",
+        training: "행사/훈련편",
+        song: "군가편"
     };
 
     const songs = [
         {
-            title: "군조가",
-            artist: "의장대군가",
-            src: "song3.m4a",
+            title: "군조가", artist: "의장대군가", src: "song3.m4a", fallbackDuration: 68,
             lyrics: [
                 { time: 0, text: "반짝이는 백철모-에 / 명예를 걸고요" },
                 { time: 7, text: "(붐빠붐빠 붐빠붐빠) 행진 속에 / 청춘은 갑니다" },
@@ -647,9 +980,7 @@
             ]
         },
         {
-            title: "의장대가",
-            artist: "의장대군가",
-            src: "song1.m4a",
+            title: "의장대가", artist: "의장대군가", src: "song1.m4a", fallbackDuration: 126,
             lyrics: [
                 { time: 0, text: "찬란한 전통과 빛을 이-을(헤이)" },
                 { time: 5, text: "나는대한 건-아" },
@@ -665,7 +996,7 @@
                 { time: 65, text: "영 원히 빛낼- 의 장 대" },
                 { time: 70, text: "반짝이는 백철모에 명예를 걸고요 뿜빠뿜빠 뿜빠뿜빠" },
                 { time: 75, text: "행진 속에 청춘은 갑니다" },
-                { time: 79, text: "처녀 열아홉살 아름다운 꿈 속에는 라이라이라이라이 차차차 라이라이라이라이 차차차" },
+                { time: 79, text: "처녀 열아홉살 아름다운 꿈 속에는 라이라이라이라이 차차차" },
                 { time: 88, text: "돌아가는 엠모원에 멋쟁이 용사들" },
                 { time: 94, text: "당신만이 그리워서 생각을 합니다" },
                 { time: 101, text: "오늘은 어딜가서 행사를 하고 내일은 어딜가서 파티를 하나" },
@@ -674,9 +1005,7 @@
             ]
         },
         {
-            title: "계룡산 호랑이",
-            artist: "의장대군가",
-            src: "song2.m4a",
+            title: "계룡산 호랑이", artist: "의장대군가", src: "song2.m4a", fallbackDuration: 58,
             lyrics: [
                 { time: 0, text: "계룡산 정기뻗어 여기에 맺히고" },
                 { time: 8, text: "백-두화랑 정통받은 대한육군 의장대" },
@@ -693,156 +1022,186 @@
         }
     ];
 
+    let currentLifeCat = 'all';
     let currentSongIndex = 0;
     let isPlaying = false;
-    let audioPlayer = document.getElementById('audio-player');
+    let simulatedTime = 0;
+    let fallbackTimer = null;
+    let usingFallback = false;
+    const audioPlayer = document.getElementById('audio-player');
 
-    const app = document.getElementById('app');
-    const contentTitle = document.getElementById('content-title');
-    const contentBody = document.getElementById('content-body');
-
-    function openContent(section) {
-        contentTitle.innerText = contentData[section].title;
-        contentBody.innerHTML = contentData[section].html;
-        app.classList.add('state-content-active');
+    // Section Toggles
+    function openContent(sectionId) {
+        document.getElementById('app').classList.add('state-content-active');
+        document.getElementById('content-title').innerText = sectionTitles[sectionId];
         
-        if (section === 'song') {
-            initPlayer();
-        } else {
-            resetPlayer();
-        }
+        document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
+        document.getElementById('section-' + sectionId).classList.add('active');
+
+        document.querySelectorAll('.quick-nav-pill').forEach(el => el.classList.remove('active'));
+        document.getElementById('nav-pill-' + sectionId).classList.add('active');
+
+        if (sectionId === 'song') initPlayer();
+        else resetPlayer();
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function closeContent() {
-        app.classList.remove('state-content-active');
+        document.getElementById('app').classList.remove('state-content-active');
         resetPlayer();
     }
 
+    // Life Section Filters
+    function selectLifeCategory(category) {
+        currentLifeCat = category;
+        document.querySelectorAll('.cat-chip').forEach(chip => {
+            chip.classList.toggle('active', chip.dataset.cat === category);
+        });
+        filterLifeRules();
+    }
+
+    function filterLifeRules() {
+        const query = document.getElementById('life-search-input').value.trim().toLowerCase();
+        const items = document.querySelectorAll('#life-rule-list li');
+        let visible = 0;
+
+        items.forEach(li => {
+            const catMatch = currentLifeCat === 'all' || li.dataset.cat === currentLifeCat;
+            const textMatch = !query || li.innerText.toLowerCase().includes(query);
+            if (catMatch && textMatch) {
+                li.style.display = '';
+                visible++;
+            } else {
+                li.style.display = 'none';
+            }
+        });
+        document.getElementById('life-empty-msg').style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    // Audio Player
     function initPlayer() {
-        audioPlayer = document.getElementById('audio-player');
-        
-        audioPlayer.removeEventListener('timeupdate', updateProgress);
         audioPlayer.addEventListener('timeupdate', updateProgress);
-        audioPlayer.addEventListener('loadedmetadata', () => {
+        audioPlayer.onloadedmetadata = () => {
+            usingFallback = false;
             document.getElementById('total-time').innerText = formatTime(audioPlayer.duration);
-        });
-        audioPlayer.addEventListener('ended', () => {
-            resetPlayerUI();
-        });
-        
+        };
+        audioPlayer.onended = resetPlayerUI;
         loadSong(currentSongIndex);
-        updateTabsUI();
     }
 
     function selectSong(index) {
         if (currentSongIndex === index) return;
         currentSongIndex = index;
+        document.querySelectorAll('.song-tab').forEach((tab, i) => tab.classList.toggle('active', i === index));
         loadSong(index);
-        updateTabsUI();
-        
-        // 탭 변경 시 자동 재생
-        audioPlayer.play().then(() => {
-            isPlaying = true;
-            document.getElementById('play-btn').innerHTML = '&#10074;&#10074;';
-        }).catch(e => console.log("Autoplay blocked:", e));
-    }
-
-    function updateTabsUI() {
-        const tabs = document.querySelectorAll('.song-tab');
-        tabs.forEach((tab, i) => {
-            if (i === currentSongIndex) {
-                tab.classList.add('active');
-            } else {
-                tab.classList.remove('active');
-            }
-        });
+        playAudio();
     }
 
     function loadSong(index) {
+        stopFallback();
         const song = songs[index];
+        simulatedTime = 0;
+        
         document.getElementById('song-title').innerText = song.title;
         document.getElementById('song-artist').innerText = song.artist;
+        document.getElementById('total-time').innerText = formatTime(song.fallbackDuration);
         
+        const lyricsWrap = document.getElementById('lyrics-container');
+        lyricsWrap.innerHTML = song.lyrics.map((l, i) => 
+            `<div class="lyric-line ${i===0?'active':''}" onclick="jumpTime(${l.time})">${l.text}</div>`
+        ).join('');
+
         audioPlayer.src = song.src;
         audioPlayer.load();
-        
-        const lyricsContainer = document.getElementById('lyrics-container');
-        lyricsContainer.innerHTML = '';
-        
-        song.lyrics.forEach((line) => {
-            const el = document.createElement('div');
-            el.className = 'lyric-line';
-            el.innerText = line.text;
-            el.onclick = () => jumpToTime(line.time);
-            lyricsContainer.appendChild(el);
-        });
-        
-        document.getElementById('current-time').innerText = "0:00";
-        document.getElementById('progress-bar-fill').style.width = '0%';
-        
-        if(isPlaying) {
-            document.getElementById('play-btn').innerHTML = '&#10074;&#10074;';
-        } else {
-            document.getElementById('play-btn').innerHTML = '&#9654;';
-        }
+        resetPlayerUI(false);
     }
 
     function togglePlay() {
-        const btn = document.getElementById('play-btn');
-        if (audioPlayer.paused) {
-            audioPlayer.play();
+        isPlaying ? pauseAudio() : playAudio();
+    }
+
+    function playAudio() {
+        audioPlayer.play().then(() => {
+            usingFallback = false;
             isPlaying = true;
-            btn.innerHTML = '&#10074;&#10074;';
-        } else {
-            audioPlayer.pause();
-            isPlaying = false;
-            btn.innerHTML = '&#9654;';
-        }
+            document.getElementById('play-btn').innerHTML = '&#10074;&#10074;';
+        }).catch(() => {
+            usingFallback = true;
+            isPlaying = true;
+            document.getElementById('play-btn').innerHTML = '&#10074;&#10074;';
+            startFallback();
+        });
+    }
+
+    function pauseAudio() {
+        audioPlayer.pause();
+        stopFallback();
+        isPlaying = false;
+        document.getElementById('play-btn').innerHTML = '&#9654;';
     }
 
     function resetPlayer() {
-        if (audioPlayer) {
-            audioPlayer.pause();
-            audioPlayer.currentTime = 0;
-        }
-        isPlaying = false;
-        currentSongIndex = 0; // 돌아갈때 초기화
+        pauseAudio();
+        audioPlayer.currentTime = 0;
+        currentSongIndex = 0;
     }
 
-    function resetPlayerUI() {
-        isPlaying = false;
-        document.getElementById('play-btn').innerHTML = '&#9654;';
-        audioPlayer.currentTime = 0;
+    function resetPlayerUI(fullReset = true) {
+        if(fullReset) pauseAudio();
+        simulatedTime = 0;
+        if(audioPlayer) audioPlayer.currentTime = 0;
         document.getElementById('progress-bar-fill').style.width = '0%';
         document.getElementById('current-time').innerText = "0:00";
+        if(fullReset) document.getElementById('play-btn').innerHTML = '&#9654;';
+        
+        const lines = document.querySelectorAll('.lyric-line');
+        if(lines.length > 0) {
+            lines.forEach(l => l.classList.remove('active'));
+            lines[0].classList.add('active');
+            lines[0].scrollIntoView({ block: 'center' });
+        }
+    }
+
+    function startFallback() {
+        stopFallback();
+        const maxTime = songs[currentSongIndex].fallbackDuration;
+        fallbackTimer = setInterval(() => {
+            simulatedTime += 0.25;
+            if (simulatedTime >= maxTime) {
+                resetPlayerUI();
+            } else {
+                renderState(simulatedTime, maxTime);
+            }
+        }, 250);
+    }
+
+    function stopFallback() {
+        if (fallbackTimer) clearInterval(fallbackTimer);
+        fallbackTimer = null;
     }
 
     function updateProgress() {
-        if (!audioPlayer.duration) return;
-        
-        const currentTime = audioPlayer.currentTime;
-        const duration = audioPlayer.duration;
-        const pct = (currentTime / duration) * 100;
-        
+        if (usingFallback || !audioPlayer.duration) return;
+        renderState(audioPlayer.currentTime, audioPlayer.duration);
+    }
+
+    function renderState(current, total) {
+        const pct = Math.min(100, (current / total) * 100);
         document.getElementById('progress-bar-fill').style.width = pct + '%';
-        document.getElementById('current-time').innerText = formatTime(Math.floor(currentTime));
-        
-        // Sync lyrics
+        document.getElementById('current-time').innerText = formatTime(Math.floor(current));
+
         const song = songs[currentSongIndex];
-        const lines = document.querySelectorAll('.lyric-line');
-        let activeIndex = -1;
-        
+        let activeIdx = -1;
         for (let i = 0; i < song.lyrics.length; i++) {
-            if (currentTime >= song.lyrics[i].time) {
-                activeIndex = i;
-            }
+            if (current >= song.lyrics[i].time) activeIdx = i;
         }
-        
-        lines.forEach((line, index) => {
-            if (index === activeIndex) {
+
+        const lines = document.querySelectorAll('.lyric-line');
+        lines.forEach((line, i) => {
+            if (i === activeIdx) {
                 if (!line.classList.contains('active')) {
                     line.classList.add('active');
-                    // 가사가 부드럽게 중앙에 오도록 스크롤 조절
                     line.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             } else {
@@ -851,25 +1210,24 @@
         });
     }
 
-    function formatTime(seconds) {
-        if (isNaN(seconds)) return "0:00";
-        const m = Math.floor(seconds / 60);
-        const s = Math.floor(seconds % 60);
-        return m + ":" + (s < 10 ? '0' : '') + s;
+    function jumpTime(time) {
+        const total = usingFallback ? songs[currentSongIndex].fallbackDuration : (audioPlayer.duration || songs[currentSongIndex].fallbackDuration);
+        if (!usingFallback && audioPlayer.duration) audioPlayer.currentTime = time;
+        simulatedTime = time;
+        renderState(time, total);
+        if (!isPlaying) playAudio();
     }
 
-    function jumpToTime(time) {
-        audioPlayer.currentTime = time;
-        if (!isPlaying) togglePlay();
-    }
-
-    function seekSong(event) {
+    function seekSong(e) {
         const bg = document.getElementById('progress-bar-bg');
-        const rect = bg.getBoundingClientRect();
-        const clickX = event.clientX - rect.left;
-        const width = rect.width;
-        const pct = clickX / width;
-        audioPlayer.currentTime = pct * audioPlayer.duration;
+        const pct = Math.max(0, Math.min(1, e.offsetX / bg.offsetWidth));
+        const total = usingFallback ? songs[currentSongIndex].fallbackDuration : (audioPlayer.duration || songs[currentSongIndex].fallbackDuration);
+        jumpTime(pct * total);
+    }
+
+    function formatTime(s) {
+        if (isNaN(s)) return "0:00";
+        return Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, '0');
     }
 </script>
 
