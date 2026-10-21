@@ -362,6 +362,7 @@
             overflow-x: auto;
             -ms-overflow-style: none;
             scrollbar-width: none;
+            gap: 4px;
         }
         
         .quick-nav-bar::-webkit-scrollbar {
@@ -380,6 +381,10 @@
             cursor: pointer;
             text-align: center;
             border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
         .quick-nav-pill.active {
@@ -388,8 +393,55 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
 
+        .tab-badge {
+            font-size: 0.7rem;
+            background: var(--accent-color);
+            color: var(--bg-dark-green);
+            padding: 1px 6px;
+            border-radius: 999px;
+            font-weight: 800;
+            display: none;
+        }
+
+        /* --- 글로벌 검색 바 --- */
+        .global-search-container {
+            padding: 14px 16px 0;
+            background: var(--pure-white);
+        }
+
+        .global-search-wrap {
+            position: relative;
+        }
+
+        .global-search-input {
+            width: 100%;
+            padding: 11px 14px 11px 38px;
+            border-radius: 12px;
+            border: 1.5px solid rgba(23, 73, 50, 0.2);
+            font-size: 0.9rem;
+            font-family: inherit;
+            outline: none;
+            background: var(--primary-tint);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .global-search-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(23, 73, 50, 0.1);
+            background: var(--pure-white);
+        }
+
+        .global-search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
         #content-body {
-            padding: 20px 16px;
+            padding: 16px;
         }
 
         .section-content {
@@ -406,43 +458,13 @@
             to { opacity: 1; }
         }
 
-        /* --- 검색 및 필터 (생활편) --- */
-        .filter-toolbar {
-            background: var(--primary-tint);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 16px;
-        }
-
-        .search-input-wrap {
-            position: relative;
-            margin-bottom: 10px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 10px 12px 10px 34px;
-            border-radius: 8px;
-            border: 1px solid rgba(23, 73, 50, 0.2);
-            font-size: 0.9rem;
-            outline: none;
-            -webkit-appearance: none;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 1rem;
-        }
-
+        /* 생활편 카테고리 칩 */
         .category-chips {
             display: flex;
             flex-wrap: nowrap;
             overflow-x: auto;
             gap: 6px;
+            margin-bottom: 14px;
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
@@ -453,7 +475,7 @@
 
         .cat-chip {
             border: 1px solid rgba(23, 73, 50, 0.15);
-            background: var(--pure-white);
+            background: var(--primary-tint);
             color: var(--text-sub);
             padding: 6px 12px;
             border-radius: 999px;
@@ -563,7 +585,7 @@
         .empty-filter-msg {
             display: none;
             text-align: center;
-            padding: 20px;
+            padding: 30px 16px;
             color: var(--text-muted);
             font-size: 0.9rem;
             font-weight: 600;
@@ -680,10 +702,13 @@
 
         .lyric-line.active {
             font-size: 1.15rem;
-            color: var(--pure-white);
             font-weight: 800;
             color: var(--accent-bright);
             transform: scale(1.05);
+        }
+
+        .lyric-line.search-hidden {
+            display: none;
         }
 
         .player-controls {
@@ -752,7 +777,6 @@
         .play-btn:active {
             transform: scale(0.95);
         }
-
     </style>
 </head>
 <body>
@@ -830,11 +854,28 @@
             <button class="back-btn" onclick="closeContent()">돌아가기</button>
         </div>
 
+        <!-- 글로벌 통합 검색창 -->
+        <div class="global-search-container">
+            <div class="global-search-wrap">
+                <span class="global-search-icon">&#128269;</span>
+                <input type="text" class="global-search-input" id="global-search-input" placeholder="전체 수칙 및 군가 통합 검색" oninput="executeGlobalSearch()" />
+            </div>
+        </div>
+
         <!-- 빠른 네비게이션 -->
         <div class="quick-nav-bar">
-            <button class="quick-nav-pill" id="nav-pill-life" onclick="openContent('life')">생활편</button>
-            <button class="quick-nav-pill" id="nav-pill-training" onclick="openContent('training')">행사/훈련편</button>
-            <button class="quick-nav-pill" id="nav-pill-song" onclick="openContent('song')">군가편</button>
+            <button class="quick-nav-pill" id="nav-pill-life" onclick="openContent('life')">
+                <span>생활편</span>
+                <span class="tab-badge" id="badge-life"></span>
+            </button>
+            <button class="quick-nav-pill" id="nav-pill-training" onclick="openContent('training')">
+                <span>행사/훈련편</span>
+                <span class="tab-badge" id="badge-training"></span>
+            </button>
+            <button class="quick-nav-pill" id="nav-pill-song" onclick="openContent('song')">
+                <span>군가편</span>
+                <span class="tab-badge" id="badge-song"></span>
+            </button>
         </div>
 
         <!-- 컨텐츠 바디 -->
@@ -842,18 +883,12 @@
             
             <!-- 생활편 -->
             <div id="section-life" class="section-content">
-                <div class="filter-toolbar">
-                    <div class="search-input-wrap">
-                        <span class="search-icon">&#128269;</span>
-                        <input type="text" class="search-input" id="life-search-input" placeholder="수칙 키워드 검색" oninput="filterLifeRules()" />
-                    </div>
-                    <div class="category-chips">
-                        <button class="cat-chip active" data-cat="all" onclick="selectLifeCategory('all')">전체</button>
-                        <button class="cat-chip" data-cat="locker" onclick="selectLifeCategory('locker')">관물대·복장</button>
-                        <button class="cat-chip" data-cat="daily" onclick="selectLifeCategory('daily')">일과·예절</button>
-                        <button class="cat-chip" data-cat="dorm" onclick="selectLifeCategory('dorm')">생활관·점호</button>
-                        <button class="cat-chip" data-cat="leave" onclick="selectLifeCategory('leave')">출타·보고</button>
-                    </div>
+                <div class="category-chips">
+                    <button class="cat-chip active" data-cat="all" onclick="selectLifeCategory('all')">전체</button>
+                    <button class="cat-chip" data-cat="locker" onclick="selectLifeCategory('locker')">관물대·복장</button>
+                    <button class="cat-chip" data-cat="daily" onclick="selectLifeCategory('daily')">일과·예절</button>
+                    <button class="cat-chip" data-cat="dorm" onclick="selectLifeCategory('dorm')">생활관·점호</button>
+                    <button class="cat-chip" data-cat="leave" onclick="selectLifeCategory('leave')">출타·보고</button>
                 </div>
                 <ol class="custom-list" id="life-rule-list">
                     <li data-cat="leave" class="is-highlight-row"><span class="highlight">불가피한 경우가 아닌 이상 보고계통(맞선임 > 그 위 선임 or 분대장 >부소대장님 or 소대장님 > 대장님 순) 반드시 준수하기</span></li>
@@ -902,7 +937,7 @@
                         <div>대한민국 육군을 대표하는 부대로서, 행사 중에는 항상 품위를 유지할 것!</div>
                     </div>
                 </div>
-                <ol class="custom-list">
+                <ol class="custom-list" id="training-rule-list">
                     <li class="is-highlight-row"><span class="highlight">총기함 및 대검 시건 철저히 하기</span></li>
                     <li class="is-highlight-row"><span class="highlight">현황판 최신화 철저히 하기</span></li>
                     <li>팔을 풀 때 조교에게 사전 보고 후 전투복을 입거나 벗기</li>
@@ -916,6 +951,7 @@
                     <li>행사장 내에서 개인 행동 및 무단 이탈 절대 금지</li>
                     <li>국기에 대한 경례 시 '충성' 구호 생략 (무음 경례)</li>
                 </ol>
+                <div class="empty-filter-msg" id="training-empty-msg">검색 조건에 맞는 수칙이 없습니다.</div>
             </div>
 
             <!-- 군가편 -->
@@ -948,6 +984,7 @@
                         <button class="play-btn" id="play-btn" onclick="togglePlay()">&#9654;</button>
                     </div>
                 </div>
+                <div class="empty-filter-msg" id="song-empty-msg">검색 조건에 일치하는 군가 가사가 없습니다.</div>
             </div>
 
         </div>
@@ -1024,6 +1061,7 @@
         }
     ];
 
+    let currentSection = 'life';
     let currentLifeCat = 'all';
     let currentSongIndex = 0;
     let isPlaying = false;
@@ -1032,8 +1070,19 @@
     let usingFallback = false;
     const audioPlayer = document.getElementById('audio-player');
 
+    // 강조 수칙 최상단 자동 정렬
+    function prioritizeHighlights() {
+        document.querySelectorAll('ol.custom-list').forEach(list => {
+            const highlights = Array.from(list.querySelectorAll('li.is-highlight-row'));
+            highlights.reverse().forEach(li => {
+                list.insertBefore(li, list.firstChild);
+            });
+        });
+    }
+
     // Section Toggles
     function openContent(sectionId) {
+        currentSection = sectionId;
         document.getElementById('app').classList.add('state-content-active');
         document.getElementById('content-title').innerText = sectionTitles[sectionId];
         
@@ -1046,6 +1095,7 @@
         if (sectionId === 'song') initPlayer();
         else resetPlayer();
 
+        executeGlobalSearch();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -1060,25 +1110,78 @@
         document.querySelectorAll('.cat-chip').forEach(chip => {
             chip.classList.toggle('active', chip.dataset.cat === category);
         });
-        filterLifeRules();
+        executeGlobalSearch();
     }
 
-    function filterLifeRules() {
-        const query = document.getElementById('life-search-input').value.trim().toLowerCase();
-        const items = document.querySelectorAll('#life-rule-list li');
-        let visible = 0;
+    // 글로벌 통합 검색 기능
+    function executeGlobalSearch() {
+        const query = document.getElementById('global-search-input').value.trim().toLowerCase();
 
-        items.forEach(li => {
+        // 1. 생활편 필터링
+        const lifeItems = document.querySelectorAll('#life-rule-list li');
+        let lifeVisible = 0;
+        lifeItems.forEach(li => {
             const catMatch = currentLifeCat === 'all' || li.dataset.cat === currentLifeCat;
             const textMatch = !query || li.innerText.toLowerCase().includes(query);
             if (catMatch && textMatch) {
                 li.style.display = '';
-                visible++;
+                lifeVisible++;
             } else {
                 li.style.display = 'none';
             }
         });
-        document.getElementById('life-empty-msg').style.display = visible === 0 ? 'block' : 'none';
+        document.getElementById('life-empty-msg').style.display = lifeVisible === 0 ? 'block' : 'none';
+
+        // 2. 행사/훈련편 필터링
+        const trainingItems = document.querySelectorAll('#training-rule-list li');
+        let trainingVisible = 0;
+        trainingItems.forEach(li => {
+            const textMatch = !query || li.innerText.toLowerCase().includes(query);
+            if (textMatch) {
+                li.style.display = '';
+                trainingVisible++;
+            } else {
+                li.style.display = 'none';
+            }
+        });
+        document.getElementById('training-empty-msg').style.display = trainingVisible === 0 ? 'block' : 'none';
+
+        // 3. 군가편 필터링 (가사 및 곡명 매칭)
+        let songMatchCount = 0;
+        let currentSongHasMatch = false;
+
+        songs.forEach((song, idx) => {
+            const hasMatch = !query || song.title.toLowerCase().includes(query) || song.lyrics.some(l => l.text.toLowerCase().includes(query));
+            if (hasMatch) songMatchCount++;
+            if (idx === currentSongIndex) currentSongHasMatch = hasMatch;
+        });
+
+        // 현재 재생 중인 곡 가사 강조 및 가시성 처리
+        const lyricNodes = document.querySelectorAll('.lyrics-container .lyric-line');
+        lyricNodes.forEach(node => {
+            const matches = !query || node.innerText.toLowerCase().includes(query);
+            node.classList.toggle('search-hidden', !matches);
+        });
+
+        document.getElementById('song-empty-msg').style.display = (query && songMatchCount === 0) ? 'block' : 'none';
+
+        // 4. 네비게이션 탭 뱃지 카운트 표시
+        const badgeLife = document.getElementById('badge-life');
+        const badgeTraining = document.getElementById('badge-training');
+        const badgeSong = document.getElementById('badge-song');
+
+        if (query) {
+            badgeLife.innerText = lifeVisible;
+            badgeLife.style.display = 'inline-block';
+            badgeTraining.innerText = trainingVisible;
+            badgeTraining.style.display = 'inline-block';
+            badgeSong.innerText = songMatchCount;
+            badgeSong.style.display = 'inline-block';
+        } else {
+            badgeLife.style.display = 'none';
+            badgeTraining.style.display = 'none';
+            badgeSong.style.display = 'none';
+        }
     }
 
     // Audio Player
@@ -1117,6 +1220,7 @@
         audioPlayer.src = song.src;
         audioPlayer.load();
         resetPlayerUI(false);
+        executeGlobalSearch();
     }
 
     function togglePlay() {
@@ -1231,6 +1335,11 @@
         if (isNaN(s)) return "0:00";
         return Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, '0');
     }
+
+    // 초기 실행
+    document.addEventListener('DOMContentLoaded', () => {
+        prioritizeHighlights();
+    });
 </script>
 
 </body>
