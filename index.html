@@ -7,28 +7,32 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
     <style>
         :root {
-            /* 육군 의장대 시그니처 컬러 팔레트: 딥그린(메인) + 골드 & 화이트(포인트) */
-            --bg-dark-green: #0c261a;
-            --primary-deep: #113826;
-            --primary-color: #174932;
-            --primary-mid: #1f5c40;
-            --primary-soft: #eef4f0;
-            --primary-tint: #f6f9f7;
+            /* 딥 보틀 그린 & 앤틱 골드 & 웜 아이보리 럭셔리 팔레트 */
+            --bg-deep: #07150e;
+            --primary-deep: #0d2318;
+            --primary-mid: #143224;
+            --primary-surface: #1a3d2c;
+            --primary-border: rgba(212, 175, 55, 0.22);
 
-            --accent-color: #d4af37;
-            --accent-bright: #f3d46b;
-            --accent-deep: #9e7a18;
-            --accent-soft: #fcf7e6;
+            --accent-gold: #c9a84c;
+            --accent-gold-light: #eedd9d;
+            --accent-gold-dark: #8c6e26;
+            --gold-gradient: linear-gradient(135deg, #a38234 0%, #ecd78d 40%, #c9a84c 70%, #876722 100%);
+            --hero-gradient: linear-gradient(175deg, #091a12 0%, #0d2318 60%, #112d1f 100%);
 
-            --pure-white: #ffffff;
-            --text-main: #18241d;
-            --text-sub: #4c5d53;
-            --text-muted: #76877d;
+            /* 상아색 (Warm Ivory / Ecru) 팔레트 */
+            --ivory-bg: #f4f2ea;
+            --ivory-surface: #faf9f5;
+            --ivory-subtle: #eae6da;
+            --ivory-border: rgba(13, 35, 24, 0.08);
 
-            --gold-gradient: linear-gradient(135deg, #b88a28 0%, #f5df8b 35%, #d4af37 55%, #fff1b8 78%, #9e7318 100%);
-            --green-hero-gradient: linear-gradient(160deg, #0b2217 0%, #143d29 52%, #1b4f36 100%);
-            --player-bg: linear-gradient(165deg, #102e20 0%, #091a12 65%, #050f0a 100%);
-            --card-shadow: 0 12px 30px rgba(10, 34, 23, 0.1);
+            --text-dark: #121c16;
+            --text-body: #3c4c42;
+            --text-muted: #738278;
+            --text-gold: #eedd9d;
+
+            --shadow-subtle: 0 4px 20px rgba(7, 21, 14, 0.05);
+            --shadow-premium: 0 16px 36px rgba(7, 21, 14, 0.12);
         }
 
         * {
@@ -40,8 +44,8 @@
             margin: 0;
             padding: 0;
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-            background: linear-gradient(180deg, #0d291c 0%, #133927 280px, #eff4f1 280px, #eff4f1 100%);
-            color: var(--text-main);
+            background-color: var(--ivory-bg);
+            color: var(--text-dark);
             overflow-x: hidden;
             display: flex;
             justify-content: center;
@@ -50,21 +54,22 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        /* 최상단 골드 슬림 바 */
         body::before {
             content: '';
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
+            height: 3px;
             background: var(--gold-gradient);
-            z-index: 100;
+            z-index: 1000;
         }
 
         .app-container {
             width: 100%;
             max-width: 680px;
-            padding: 20px 16px 40px;
+            padding: 24px 18px 48px;
             position: relative;
             min-height: 100vh;
             display: flex;
@@ -72,29 +77,101 @@
             align-items: center;
         }
 
-        /* --- 메인 히어로 영역 --- */
+        /* =========================================
+           인트로 스플래시 오버레이 & 애니메이션
+        ========================================= */
+        #intro-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-deep);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .intro-emblem-wrap {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .intro-glow {
+            position: absolute;
+            inset: -20px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 168, 76, 0.3) 0%, transparent 70%);
+            animation: pulseGlow 1.8s infinite ease-in-out;
+        }
+
+        .intro-mark {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
+        }
+
+        .intro-text {
+            margin-top: 18px;
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            color: var(--accent-gold);
+            font-weight: 700;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(0.95); opacity: 0.4; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        /* 인트로 완료 전 메인 요소 숨김 & 트랜지션 */
+        .hero-card, .menu-container {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body.intro-finished .hero-card {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        body.intro-finished .menu-container {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.15s;
+        }
+
+        /* --- 메인 히어로 카드 --- */
         .hero-card {
             width: 100%;
-            background: var(--green-hero-gradient);
+            background: var(--hero-gradient);
             border-radius: 24px;
-            padding: 32px 24px 28px;
+            padding: 36px 24px 30px;
             display: flex;
             flex-direction: column;
             align-items: center;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 16px 36px rgba(7, 24, 16, 0.25);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            transition: all 0.4s ease;
-            margin-top: 10px;
+            box-shadow: 0 20px 40px rgba(7, 21, 14, 0.28);
+            border: 1px solid var(--primary-border);
+            margin-top: 6px;
         }
 
-        .hero-card::before {
+        .hero-card::after {
             content: '';
             position: absolute;
-            inset: 8px;
-            border-radius: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            inset: 6px;
+            border-radius: 19px;
+            border: 1px solid rgba(201, 168, 76, 0.12);
             pointer-events: none;
         }
 
@@ -104,111 +181,102 @@
             gap: 8px;
             padding: 6px 14px;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(212, 175, 55, 0.5);
-            color: var(--accent-bright);
-            font-size: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(201, 168, 76, 0.35);
+            color: var(--accent-gold-light);
+            font-size: 0.72rem;
             font-weight: 700;
-            letter-spacing: 1.2px;
-            margin-bottom: 16px;
-            z-index: 1;
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
+            z-index: 2;
         }
 
         .unit-pill-dot {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
             border-radius: 50%;
-            background: var(--accent-bright);
-            box-shadow: 0 0 8px var(--accent-bright);
+            background: var(--accent-gold);
+            box-shadow: 0 0 6px var(--accent-gold);
         }
 
         .mark-container {
-            width: 110px;
-            height: 116px;
-            margin-bottom: 16px;
+            width: 96px;
+            height: 102px;
+            margin-bottom: 20px;
             position: relative;
-            z-index: 1;
+            z-index: 2;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .mark-glow {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
         }
 
         .mark-img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            position: relative;
-            z-index: 2;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
         }
 
         .main-title {
-            font-size: 1.8rem;
+            font-size: 1.75rem;
             font-weight: 800;
-            margin: 0 0 20px 0;
+            margin: 0 0 16px 0;
             text-align: center;
-            color: var(--pure-white);
+            color: #ffffff;
             letter-spacing: -0.5px;
-            z-index: 1;
+            z-index: 2;
         }
 
         .gold-divider {
-            width: 60px;
-            height: 3px;
+            width: 48px;
+            height: 2px;
             border-radius: 999px;
             background: var(--gold-gradient);
-            margin-bottom: 20px;
-            z-index: 1;
+            margin-bottom: 18px;
+            z-index: 2;
+            opacity: 0.8;
         }
 
         .motto-strip {
             width: 100%;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(201, 168, 76, 0.18);
             border-radius: 12px;
-            padding: 12px 16px;
+            padding: 11px 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--pure-white);
-            font-size: 0.9rem;
+            color: #dbe4de;
+            font-size: 0.86rem;
             font-weight: 600;
-            z-index: 1;
+            letter-spacing: 0.5px;
+            z-index: 2;
         }
 
-        /* --- 메인 메뉴 카드 버튼 --- */
+        /* --- 메인 메뉴 카드 --- */
         .menu-container {
             display: flex;
             flex-direction: column;
             gap: 12px;
             width: 100%;
-            margin-top: 16px;
-            transition: all 0.4s ease;
+            margin-top: 18px;
         }
 
         .menu-btn {
-            background: var(--pure-white);
-            border: 1px solid rgba(23, 73, 50, 0.1);
-            color: var(--primary-deep);
-            padding: 16px;
+            background: var(--ivory-surface);
+            border: 1px solid var(--ivory-border);
+            color: var(--text-dark);
+            padding: 16px 18px;
             border-radius: 18px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: var(--card-shadow);
+            box-shadow: var(--shadow-subtle);
             display: flex;
             align-items: center;
-            text-align: left;
-            gap: 14px;
+            gap: 16px;
             position: relative;
             overflow: hidden;
+            transition: all 0.25s ease;
         }
 
         .menu-btn::before {
@@ -217,31 +285,45 @@
             left: 0;
             top: 0;
             bottom: 0;
-            width: 4px;
+            width: 3.5px;
             background: var(--gold-gradient);
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-premium);
+            border-color: rgba(201, 168, 76, 0.35);
+        }
+
+        .menu-btn:hover::before {
+            opacity: 1;
         }
 
         .menu-btn-icon {
-            width: 42px;
-            height: 42px;
+            width: 44px;
+            height: 44px;
             border-radius: 12px;
-            background: var(--primary-soft);
-            color: var(--primary-color);
+            background: var(--primary-deep);
+            color: var(--accent-gold);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            border: 1px solid rgba(201, 168, 76, 0.2);
         }
 
         .menu-btn-text-wrap {
             flex: 1;
+            text-align: left;
         }
 
         .menu-btn-label {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 800;
-            color: var(--primary-deep);
-            margin-bottom: 2px;
+            color: var(--text-dark);
+            margin-bottom: 3px;
         }
 
         .menu-btn-desc {
@@ -253,34 +335,34 @@
         .menu-btn-count {
             font-size: 0.75rem;
             font-weight: 700;
-            color: var(--accent-deep);
-            background: var(--accent-soft);
-            padding: 4px 10px;
+            color: var(--accent-gold-dark);
+            background: rgba(201, 168, 76, 0.12);
+            border: 1px solid rgba(201, 168, 76, 0.25);
+            padding: 5px 11px;
             border-radius: 999px;
             white-space: nowrap;
         }
 
         .menu-btn:active {
-            transform: scale(0.98);
+            transform: scale(0.99);
         }
 
-        /* --- 상세 화면 진입 시 전환 --- */
+        /* --- 상세 화면 진입 전환 --- */
         .app-container.state-content-active .hero-card,
         .app-container.state-content-active .menu-container {
             display: none;
         }
 
-        /* --- 컨텐츠 컨테이너 --- */
+        /* --- 상세 컨텐츠 컨테이너 --- */
         .content-container {
             width: 100%;
-            background: var(--pure-white);
-            border-radius: 20px;
-            padding: 0;
-            box-shadow: 0 16px 36px rgba(10, 34, 23, 0.12);
+            background: var(--ivory-surface);
+            border-radius: 22px;
+            box-shadow: var(--shadow-premium);
             display: none;
             overflow: hidden;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            animation: slideUp 0.3s ease forwards;
+            border: 1px solid rgba(201, 168, 76, 0.25);
+            animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .app-container.state-content-active .content-container {
@@ -288,18 +370,18 @@
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(16px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         /* 상세 페이지 헤더 */
         .content-header {
-            background: var(--green-hero-gradient);
+            background: var(--hero-gradient);
             padding: 16px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid var(--accent-color);
+            border-bottom: 2px solid var(--accent-gold);
             position: relative;
         }
 
@@ -311,7 +393,7 @@
             width: 60px;
             height: 60px;
             object-fit: contain;
-            opacity: 0.1;
+            opacity: 0.08;
             pointer-events: none;
         }
 
@@ -326,13 +408,14 @@
             width: 32px;
             height: 32px;
             object-fit: contain;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.4));
         }
 
         .content-eyebrow {
             font-size: 0.65rem;
             font-weight: 700;
-            color: var(--accent-bright);
-            letter-spacing: 1px;
+            color: var(--accent-gold-light);
+            letter-spacing: 1.2px;
             display: block;
         }
 
@@ -340,73 +423,31 @@
             font-size: 1.25rem;
             font-weight: 800;
             margin: 0;
-            color: var(--pure-white);
+            color: #ffffff;
         }
 
         .back-btn {
-            background: rgba(255, 255, 255, 0.15);
-            color: var(--pure-white);
-            border: none;
-            padding: 8px 12px;
-            font-size: 0.85rem;
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 8px 14px;
+            font-size: 0.82rem;
             font-weight: 700;
-            border-radius: 8px;
+            border-radius: 9px;
             cursor: pointer;
             z-index: 1;
+            transition: all 0.2s;
         }
 
-        .quick-nav-bar {
-            display: flex;
-            background: var(--primary-soft);
-            padding: 8px 12px;
-            overflow-x: auto;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-            gap: 4px;
-        }
-        
-        .quick-nav-bar::-webkit-scrollbar {
-            display: none;
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.16);
         }
 
-        .quick-nav-pill {
-            flex: 1;
-            min-width: 90px;
-            padding: 10px 8px;
-            border: none;
-            background: transparent;
-            color: var(--text-sub);
-            font-size: 0.85rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-align: center;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .quick-nav-pill.active {
-            background: var(--pure-white);
-            color: var(--primary-deep);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-        }
-
-        .tab-badge {
-            font-size: 0.7rem;
-            background: var(--accent-color);
-            color: var(--bg-dark-green);
-            padding: 1px 6px;
-            border-radius: 999px;
-            font-weight: 800;
-            display: none;
-        }
-
-        /* --- 글로벌 검색 바 --- */
+        /* 글로벌 검색 바 */
         .global-search-container {
-            padding: 14px 16px 0;
-            background: var(--pure-white);
+            padding: 16px 18px 12px;
+            background: var(--ivory-surface);
+            border-bottom: 1px solid var(--ivory-border);
         }
 
         .global-search-wrap {
@@ -415,33 +456,78 @@
 
         .global-search-input {
             width: 100%;
-            padding: 11px 14px 11px 38px;
+            padding: 12px 14px 12px 42px;
             border-radius: 12px;
-            border: 1.5px solid rgba(23, 73, 50, 0.2);
+            border: 1.5px solid var(--ivory-subtle);
+            background: var(--ivory-bg);
+            color: var(--text-dark);
             font-size: 0.9rem;
             font-family: inherit;
             outline: none;
-            background: var(--primary-tint);
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: all 0.2s;
         }
 
         .global-search-input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(23, 73, 50, 0.1);
-            background: var(--pure-white);
+            border-color: var(--accent-gold);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.15);
         }
 
         .global-search-icon {
             position: absolute;
-            left: 12px;
+            left: 14px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
             font-size: 1rem;
         }
 
+        /* 탭 네비게이션 */
+        .quick-nav-bar {
+            display: flex;
+            background: var(--ivory-subtle);
+            padding: 6px;
+            gap: 4px;
+            border-bottom: 1px solid var(--ivory-border);
+        }
+
+        .quick-nav-pill {
+            flex: 1;
+            min-width: 90px;
+            padding: 10px 8px;
+            border: none;
+            background: transparent;
+            color: var(--text-body);
+            font-size: 0.84rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .quick-nav-pill.active {
+            background: var(--ivory-surface);
+            color: var(--primary-deep);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .tab-badge {
+            font-size: 0.68rem;
+            background: var(--accent-gold);
+            color: var(--bg-deep);
+            padding: 1px 6px;
+            border-radius: 999px;
+            font-weight: 800;
+            display: none;
+        }
+
         #content-body {
-            padding: 16px;
+            padding: 20px 18px;
         }
 
         .section-content {
@@ -450,7 +536,7 @@
 
         .section-content.active {
             display: block;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.25s ease;
         }
 
         @keyframes fadeIn {
@@ -458,50 +544,53 @@
             to { opacity: 1; }
         }
 
-        /* 생활편 카테고리 칩 */
+        /* 카테고리 칩 */
         .category-chips {
             display: flex;
             flex-wrap: nowrap;
             overflow-x: auto;
             gap: 6px;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
             -ms-overflow-style: none;
             scrollbar-width: none;
+            padding-bottom: 2px;
         }
-        
+
         .category-chips::-webkit-scrollbar {
             display: none;
         }
 
         .cat-chip {
-            border: 1px solid rgba(23, 73, 50, 0.15);
-            background: var(--primary-tint);
-            color: var(--text-sub);
-            padding: 6px 12px;
+            border: 1px solid var(--ivory-subtle);
+            background: var(--ivory-bg);
+            color: var(--text-body);
+            padding: 6px 13px;
             border-radius: 999px;
-            font-size: 0.75rem;
+            font-size: 0.76rem;
             font-weight: 700;
             white-space: nowrap;
             cursor: pointer;
+            transition: all 0.2s;
         }
 
         .cat-chip.active {
-            background: var(--primary-color);
-            color: var(--pure-white);
-            border-color: var(--primary-color);
+            background: var(--primary-deep);
+            color: var(--accent-gold-light);
+            border-color: var(--primary-deep);
         }
 
-        /* --- 공지 박스 --- */
+        /* Notice Box */
         .notice-box {
-            background: linear-gradient(135deg, #133c28 0%, #1b5238 100%);
-            border-left: 4px solid var(--accent-color);
+            background: linear-gradient(135deg, #0e2419 0%, #163626 100%);
+            border-left: 3.5px solid var(--accent-gold);
             padding: 14px 16px;
-            margin-bottom: 16px;
-            border-radius: 10px;
-            color: var(--pure-white);
+            margin-bottom: 18px;
+            border-radius: 12px;
+            color: #ffffff;
             display: flex;
             align-items: center;
             gap: 12px;
+            box-shadow: 0 4px 14px rgba(7, 21, 14, 0.1);
         }
 
         .notice-box-mark {
@@ -512,19 +601,21 @@
         }
 
         .notice-box-label {
-            font-size: 0.7rem;
-            color: var(--accent-bright);
+            font-size: 0.68rem;
+            color: var(--accent-gold);
             font-weight: 800;
-            margin-bottom: 2px;
+            margin-bottom: 3px;
+            letter-spacing: 0.5px;
         }
 
         .notice-box-text {
             font-size: 0.85rem;
             font-weight: 600;
-            line-height: 1.4;
+            line-height: 1.45;
+            color: #e4eee7;
         }
 
-        /* --- 리스트 스타일 --- */
+        /* --- 수칙 리스트 --- */
         ol.custom-list {
             list-style: none;
             counter-reset: item;
@@ -537,73 +628,75 @@
 
         ol.custom-list > li {
             counter-increment: item;
-            padding: 14px 14px 14px 46px;
+            padding: 14px 14px 14px 48px;
             position: relative;
-            line-height: 1.4;
-            font-size: 0.9rem;
-            color: var(--text-main);
-            background: var(--pure-white);
-            border: 1px solid rgba(23, 73, 50, 0.1);
+            line-height: 1.45;
+            font-size: 0.89rem;
+            color: var(--text-dark);
+            background: #ffffff;
+            border: 1px solid var(--ivory-border);
             border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+            transition: border-color 0.2s;
         }
 
         ol.custom-list > li::before {
             content: counter(item);
             position: absolute;
-            left: 12px;
-            top: 12px;
-            width: 24px;
-            height: 24px;
-            background: var(--primary-color);
-            color: var(--accent-bright);
+            left: 14px;
+            top: 13px;
+            width: 23px;
+            height: 23px;
+            background: var(--primary-deep);
+            color: var(--accent-gold-light);
             border-radius: 6px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 0.75rem;
+            font-size: 0.74rem;
             font-weight: 800;
         }
 
         .highlight {
-            color: #7a5600;
-            background: rgba(212, 175, 55, 0.15);
-            padding: 2px 4px;
+            color: #8c6e26;
+            background: rgba(201, 168, 76, 0.16);
+            padding: 2px 5px;
             border-radius: 4px;
             font-weight: 800;
         }
 
         ol.custom-list > li.is-highlight-row {
-            background: #fffdf6;
-            border: 1px solid rgba(212, 175, 55, 0.4);
+            background: #fbf9f0;
+            border: 1px solid rgba(201, 168, 76, 0.45);
         }
 
         ol.custom-list > li.is-highlight-row::before {
             background: var(--gold-gradient);
-            color: var(--bg-dark-green);
+            color: var(--bg-deep);
         }
 
         .empty-filter-msg {
             display: none;
             text-align: center;
-            padding: 30px 16px;
+            padding: 36px 16px;
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             font-weight: 600;
         }
 
-        /* --- 군가편 플레이어 --- */
+        /* --- 군가 플레이어 --- */
         .song-selector {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             margin-bottom: 16px;
-            background: var(--primary-soft);
-            padding: 6px;
+            background: var(--ivory-subtle);
+            padding: 5px;
             border-radius: 12px;
             overflow-x: auto;
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-        
+
         .song-selector::-webkit-scrollbar {
             display: none;
         }
@@ -611,37 +704,41 @@
         .song-tab {
             flex: 1;
             min-width: 80px;
-            padding: 8px;
+            padding: 9px;
             border: none;
             background: transparent;
             border-radius: 8px;
-            font-size: 0.85rem;
+            font-size: 0.84rem;
             font-weight: 700;
-            color: var(--text-sub);
+            color: var(--text-body);
             cursor: pointer;
             white-space: nowrap;
+            transition: all 0.2s;
         }
 
         .song-tab.active {
-            background: var(--primary-color);
-            color: var(--pure-white);
+            background: var(--primary-deep);
+            color: var(--accent-gold-light);
         }
 
         .music-player-container {
-            background: var(--player-bg);
-            border-radius: 16px;
-            padding: 24px 16px;
-            color: var(--pure-white);
+            background: linear-gradient(175deg, #0a1f15 0%, #06150e 70%, #030a07 100%);
+            border-radius: 18px;
+            padding: 26px 18px;
+            color: #ffffff;
             display: flex;
             flex-direction: column;
             align-items: center;
             position: relative;
+            border: 1px solid var(--primary-border);
+            box-shadow: 0 12px 30px rgba(7, 21, 14, 0.35);
         }
 
         .player-emblem-badge {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 8px;
+            width: 44px;
+            height: 44px;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
         }
 
         .player-emblem-badge img {
@@ -651,60 +748,63 @@
         }
 
         .song-title {
-            font-size: 1.4rem;
+            font-size: 1.35rem;
             font-weight: 800;
             margin: 0 0 4px 0;
-            color: var(--accent-bright);
+            color: var(--accent-gold-light);
             text-align: center;
         }
 
         .song-artist {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.78rem;
+            color: rgba(255, 255, 255, 0.6);
             text-align: center;
             margin-bottom: 12px;
+            letter-spacing: 0.5px;
         }
 
         .lyrics-helper-tip {
             font-size: 0.7rem;
-            color: var(--accent-bright);
-            background: rgba(255, 255, 255, 0.1);
-            padding: 4px 10px;
+            color: var(--accent-gold);
+            background: rgba(201, 168, 76, 0.12);
+            border: 1px solid rgba(201, 168, 76, 0.25);
+            padding: 4px 12px;
             border-radius: 999px;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
         .lyrics-container {
             width: 100%;
-            height: 200px;
+            height: 190px;
             overflow-y: auto;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
             padding: 10px 0;
-            mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
-            -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+            mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
             scroll-behavior: smooth;
         }
-        
+
         .lyrics-container::-webkit-scrollbar {
             display: none;
         }
 
         .lyric-line {
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             font-weight: 600;
             margin: 14px 0;
-            color: rgba(255, 255, 255, 0.4);
+            color: rgba(255, 255, 255, 0.35);
             transition: all 0.3s ease;
             cursor: pointer;
-            padding: 4px;
+            padding: 2px 8px;
         }
 
         .lyric-line.active {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: 800;
-            color: var(--accent-bright);
-            transform: scale(1.05);
+            color: var(--accent-gold-light);
+            transform: scale(1.04);
+            text-shadow: 0 0 12px rgba(201, 168, 76, 0.4);
         }
 
         .lyric-line.search-hidden {
@@ -723,15 +823,15 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.6);
             margin-bottom: 16px;
         }
 
         .progress-bar-bg {
             flex: 1;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.2);
+            height: 5px;
+            background: rgba(255, 255, 255, 0.15);
             border-radius: 999px;
             position: relative;
             cursor: pointer;
@@ -751,35 +851,47 @@
         .progress-bar-fill::after {
             content: '';
             position: absolute;
-            right: -6px;
+            right: -5px;
             top: 50%;
             transform: translateY(-50%);
-            width: 12px;
-            height: 12px;
-            background: var(--pure-white);
+            width: 10px;
+            height: 10px;
+            background: #ffffff;
             border-radius: 50%;
+            box-shadow: 0 0 6px rgba(0,0,0,0.5);
         }
 
         .play-btn {
             background: var(--gold-gradient);
             border: none;
-            color: var(--bg-dark-green);
-            width: 54px;
-            height: 54px;
+            color: var(--bg-deep);
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
+            box-shadow: 0 6px 18px rgba(201, 168, 76, 0.35);
+            transition: transform 0.2s ease;
         }
-        
+
         .play-btn:active {
-            transform: scale(0.95);
+            transform: scale(0.94);
         }
     </style>
 </head>
 <body>
+
+<!-- 인트로 스플래시 오버레이 -->
+<div id="intro-overlay">
+    <div class="intro-emblem-wrap" id="intro-emblem">
+        <div class="intro-glow"></div>
+        <img class="intro-mark" src="Code_Generated_Image.png" alt="의장대 마크" onerror="this.src='https://placehold.co/120x120/0d2318/c9a84c?text=HONOR+GUARD'"[cite: 1]/>
+    </div>
+    <div class="intro-text" id="intro-caption">ROK ARMY HONOR GUARD</div>
+</div>
 
 <div class="app-container" id="app">
 
@@ -790,9 +902,8 @@
             <span>ROK ARMY HONOR GUARD</span>
         </div>
 
-        <div class="mark-container">
-            <div class="mark-glow"></div>
-            <img class="mark-img" src="Code_Generated_Image.png" alt="대한민국 육군 의장대 마크" onerror="this.src='https://placehold.co/100x100/174932/d4af37?text=MARK'"/>
+        <div class="mark-container" id="target-mark-container">
+            <img class="mark-img" id="hero-mark-img" src="Code_Generated_Image.png" alt="대한민국 육군 의장대 마크" onerror="this.src='https://placehold.co/100x100/0d2318/c9a84c?text=MARK'"[cite: 1]/>
         </div>
 
         <h1 class="main-title">의장대에서 살아남기</h1>
@@ -843,9 +954,9 @@
     <div class="content-container">
         <!-- 헤더 -->
         <div class="content-header">
-            <img class="header-watermark" src="Code_Generated_Image.png" alt="워터마크" onerror="this.style.display='none'"/>
+            <img class="header-watermark" src="Code_Generated_Image.png" alt="워터마크" onerror="this.style.display='none'"[cite: 1]/>
             <div class="content-header-left">
-                <img class="header-mini-mark" src="Code_Generated_Image.png" alt="의장대 마크" onerror="this.src='https://placehold.co/32x32/174932/d4af37?text=M'"/>
+                <img class="header-mini-mark" src="Code_Generated_Image.png" alt="의장대 마크" onerror="this.src='https://placehold.co/32x32/0d2318/c9a84c?text=M'"[cite: 1]/>
                 <div>
                     <span class="content-eyebrow">ROKA HONOR GUARD GUIDE</span>
                     <h2 class="content-title" id="content-title">메뉴명</h2>
@@ -931,7 +1042,7 @@
             <!-- 행사/훈련편 -->
             <div id="section-training" class="section-content">
                 <div class="notice-box">
-                    <img class="notice-box-mark" src="Code_Generated_Image.png" alt="의장대 마크" onerror="this.src='https://placehold.co/32x32/174932/d4af37?text=M'"/>
+                    <img class="notice-box-mark" src="Code_Generated_Image.png" alt="의장대 마크" onerror="this.src='https://placehold.co/32x32/0d2318/c9a84c?text=M'"[cite: 1]/>
                     <div class="notice-box-text">
                         <div class="notice-box-label">HONOR GUARD PLEDGE</div>
                         <div>대한민국 육군을 대표하는 부대로서, 행사 중에는 항상 품위를 유지할 것!</div>
@@ -963,7 +1074,7 @@
                 </div>
                 <div class="music-player-container">
                     <div class="player-emblem-badge">
-                        <img src="Code_Generated_Image.png" alt="마크" onerror="this.src='https://placehold.co/48x48/174932/d4af37?text=M'"/>
+                        <img src="Code_Generated_Image.png" alt="마크" onerror="this.src='https://placehold.co/44x44/0d2318/c9a84c?text=M'"[cite: 1]/>
                     </div>
                     <div>
                         <h3 class="song-title" id="song-title">군조가</h3>
@@ -1070,7 +1181,44 @@
     let usingFallback = false;
     const audioPlayer = document.getElementById('audio-player');
 
-    // 강조 수칙 최상단 자동 정렬
+    // 시네마틱 인트로 스플래시 애니메이션 실행
+    function runIntroAnimation() {
+        const overlay = document.getElementById('intro-overlay');
+        const introEmblem = document.getElementById('intro-emblem');
+        const introCaption = document.getElementById('intro-caption');
+        const targetContainer = document.getElementById('target-mark-container');
+
+        // 약 1.1초 동안 중앙에서 대기
+        setTimeout(() => {
+            const startRect = introEmblem.getBoundingClientRect();
+            const targetRect = targetContainer.getBoundingClientRect();
+
+            const deltaX = (targetRect.left + targetRect.width / 2) - (startRect.left + startRect.width / 2);
+            const deltaY = (targetRect.top + targetRect.height / 2) - (startRect.top + startRect.height / 2);
+            const scale = targetRect.width / startRect.width;
+
+            // 캡션 페이드아웃
+            introCaption.style.transition = 'opacity 0.3s ease';
+            introCaption.style.opacity = '0';
+
+            // 엠블럼을 타깃 위치로 정밀 이동 및 축소
+            introEmblem.style.transition = 'transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.85s ease';
+            introEmblem.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scale})`;
+
+            // 배경 투명화
+            overlay.style.backgroundColor = 'transparent';
+
+            setTimeout(() => {
+                document.body.classList.add('intro-finished');
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.remove();
+                }, 600);
+            }, 600);
+        }, 1100);
+    }
+
+    // 중요 수칙 최상단 배치
     function prioritizeHighlights() {
         document.querySelectorAll('ol.custom-list').forEach(list => {
             const highlights = Array.from(list.querySelectorAll('li.is-highlight-row'));
@@ -1080,7 +1228,7 @@
         });
     }
 
-    // Section Toggles
+    // 상세 화면 열기
     function openContent(sectionId) {
         currentSection = sectionId;
         document.getElementById('app').classList.add('state-content-active');
@@ -1099,12 +1247,13 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // 메인으로 돌아가기
     function closeContent() {
         document.getElementById('app').classList.remove('state-content-active');
         resetPlayer();
     }
 
-    // Life Section Filters
+    // 생활편 카테고리 선택
     function selectLifeCategory(category) {
         currentLifeCat = category;
         document.querySelectorAll('.cat-chip').forEach(chip => {
@@ -1113,11 +1262,11 @@
         executeGlobalSearch();
     }
 
-    // 글로벌 통합 검색 기능
+    // 글로벌 통합 검색
     function executeGlobalSearch() {
         const query = document.getElementById('global-search-input').value.trim().toLowerCase();
 
-        // 1. 생활편 필터링
+        // 1. 생활편
         const lifeItems = document.querySelectorAll('#life-rule-list li');
         let lifeVisible = 0;
         lifeItems.forEach(li => {
@@ -1132,7 +1281,7 @@
         });
         document.getElementById('life-empty-msg').style.display = lifeVisible === 0 ? 'block' : 'none';
 
-        // 2. 행사/훈련편 필터링
+        // 2. 행사/훈련편
         const trainingItems = document.querySelectorAll('#training-rule-list li');
         let trainingVisible = 0;
         trainingItems.forEach(li => {
@@ -1146,17 +1295,13 @@
         });
         document.getElementById('training-empty-msg').style.display = trainingVisible === 0 ? 'block' : 'none';
 
-        // 3. 군가편 필터링 (가사 및 곡명 매칭)
+        // 3. 군가편
         let songMatchCount = 0;
-        let currentSongHasMatch = false;
-
-        songs.forEach((song, idx) => {
+        songs.forEach(song => {
             const hasMatch = !query || song.title.toLowerCase().includes(query) || song.lyrics.some(l => l.text.toLowerCase().includes(query));
             if (hasMatch) songMatchCount++;
-            if (idx === currentSongIndex) currentSongHasMatch = hasMatch;
         });
 
-        // 현재 재생 중인 곡 가사 강조 및 가시성 처리
         const lyricNodes = document.querySelectorAll('.lyrics-container .lyric-line');
         lyricNodes.forEach(node => {
             const matches = !query || node.innerText.toLowerCase().includes(query);
@@ -1165,7 +1310,7 @@
 
         document.getElementById('song-empty-msg').style.display = (query && songMatchCount === 0) ? 'block' : 'none';
 
-        // 4. 네비게이션 탭 뱃지 카운트 표시
+        // 4. 배지 카운트
         const badgeLife = document.getElementById('badge-life');
         const badgeTraining = document.getElementById('badge-training');
         const badgeSong = document.getElementById('badge-song');
@@ -1184,7 +1329,7 @@
         }
     }
 
-    // Audio Player
+    // 오디오 플레이어 로직
     function initPlayer() {
         audioPlayer.addEventListener('timeupdate', updateProgress);
         audioPlayer.onloadedmetadata = () => {
@@ -1339,6 +1484,7 @@
     // 초기 실행
     document.addEventListener('DOMContentLoaded', () => {
         prioritizeHighlights();
+        runIntroAnimation();
     });
 </script>
 
